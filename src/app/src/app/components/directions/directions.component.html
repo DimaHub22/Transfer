@@ -1,0 +1,86 @@
+<section class="directions-section">
+  <div class="container">
+    <div class="section-header reveal" #revealEl>
+      <span class="section-tag">Цены на маршруты</span>
+      <h2 class="section-title">Популярные направления</h2>
+      <div class="accent-line"></div>
+      <p class="section-subtitle">
+        Все цены фиксированные — платите ровно столько, сколько указано
+      </p>
+    </div>
+
+    <div class="directions-wrap">
+      <!-- Route cards -->
+      <div class="directions-grid">
+        <div class="direction-card reveal"
+             *ngFor="let route of routes; let i = index"
+             [class]="'delay-' + (i % 3 + 1)"
+             [class.direction-card--highlight]="route.highlight"
+             #revealEl>
+
+          <div class="route-path">
+            <div class="route-point route-from">
+              <div class="point-dot point-dot--from">
+                <i class="fas fa-plane-departure"></i>
+              </div>
+              <span>{{ route.from }}</span>
+            </div>
+            <div class="route-line">
+              <div class="route-line-track"></div>
+              <div class="route-distance">
+                <i class="fas fa-road"></i>
+                {{ route.distance }}
+              </div>
+            </div>
+            <div class="route-point route-to">
+              <div class="point-dot point-dot--to">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <span>{{ route.to }}</span>
+            </div>
+          </div>
+
+          <div class="route-details">
+            <div class="route-meta">
+                  <span class="route-time">
+                    <i class="fas fa-clock"></i>
+                    {{ route.time }}
+                  </span>
+            </div>
+            <div class="route-prices">
+              <div class="route-price-group" *ngFor="let price of route.prices">
+                <span class="price-class">{{ price.class }}</span>
+                <span class="price-amount">{{ price.amount }}</span>
+              </div>
+            </div>
+            <a href="https://wa.me/78620000000"
+               target="_blank"
+               class="btn-book">
+              Заказать
+              <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="directions-cta reveal" #revealEl>
+        <div class="directions-cta-inner">
+          <div class="cta-icon">
+            <i class="fas fa-route"></i>
+          </div>
+          <div class="cta-text">
+            <h3>Нет вашего маршрута?</h3>
+            <p>Рассчитаем стоимость любого маршрута в Сочи и Краснодарском крае за 5 минут</p>
+          </div>
+          <a href="https://wa.me/78620000000"
+             target="_blank"
+             class="btn btn-primary btn-lg">
+            <i class="fab fa-whatsapp"></i>
+            Рассчитать маршрут
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

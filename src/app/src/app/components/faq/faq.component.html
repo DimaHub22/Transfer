@@ -1,0 +1,70 @@
+<section class="faq-section">
+  <div class="container">
+    <div class="faq-wrap">
+      <!-- Left column -->
+      <div class="faq-left reveal reveal-left" #revealEl>
+        <span class="section-tag">FAQ</span>
+        <h2 class="section-title">Часто задаваемые вопросы</h2>
+        <div class="accent-line" style="margin: 16px 0 24px;"></div>
+        <p class="section-subtitle" style="margin: 0 0 32px;">
+          Ответили на самые популярные вопросы, которые нам задают клиенты
+        </p>
+
+        <div class="faq-contacts">
+          <p class="faq-contacts-title">Не нашли ответ?</p>
+          <a href="https://wa.me/78620000000"
+             target="_blank"
+             class="btn btn-whatsapp">
+            <i class="fab fa-whatsapp"></i>
+            Написать в WhatsApp
+          </a>
+          <a href="tel:+78620000000" class="faq-phone">
+            <i class="fas fa-phone"></i>
+            +7 (862) 000-00-00
+          </a>
+        </div>
+
+        <div class="faq-illustration">
+          <img
+            src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=500&q=80&auto=format&fit=crop"
+            alt="Трансфер в Сочи"
+            loading="lazy">
+          <div class="faq-img-badge">
+            <i class="fas fa-headset"></i>
+            <span>Поддержка 24/7</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right column — accordion -->
+      <div class="faq-right reveal reveal-right" #revealEl>
+        <div class="accordion">
+          <div class="accordion-item"
+               *ngFor="let item of faqItems; let i = index"
+               [class.open]="openIndex === i">
+            <button class="accordion-header"
+                    (click)="toggle(i)"
+                    [attr.aria-expanded]="openIndex === i">
+              <div class="accordion-icon-wrap">
+                <i [class]="item.icon"></i>
+              </div>
+              <span class="accordion-question">{{ item.question }}</span>
+              <div class="accordion-arrow">
+                <i class="fas fa-chevron-down"></i>
+              </div>
+            </button>
+            <div class="accordion-body" [style.maxHeight]="openIndex === i ? '500px' : '0'">
+              <div class="accordion-content">
+                <p>{{ item.answer }}</p>
+                <div class="accordion-highlight" *ngIf="item.highlight">
+                  <i class="fas fa-check-circle"></i>
+                  {{ item.highlight }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

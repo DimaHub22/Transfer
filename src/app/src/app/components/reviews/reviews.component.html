@@ -1,0 +1,146 @@
+<section class="reviews-section">
+  <div class="container">
+    <div class="section-header reveal" #revealEl>
+      <span class="section-tag">Отзывы клиентов</span>
+      <h2 class="section-title">Что говорят наши пассажиры</h2>
+      <div class="accent-line"></div>
+      <p class="section-subtitle">
+        Более 5000+ довольных клиентов доверяют нам каждый год
+      </p>
+    </div>
+
+    <!-- Rating Summary -->
+    <div class="rating-summary reveal" #revealEl>
+      <div class="rating-big">
+        <span class="rating-number">4.9</span>
+        <div class="rating-stars">
+          <i class="fas fa-star" *ngFor="let s of [1,2,3,4,5]"></i>
+        </div>
+        <span class="rating-label">Средний рейтинг</span>
+      </div>
+      <div class="rating-bars">
+        <div class="rating-bar-row" *ngFor="let row of ratingBars">
+          <span class="bar-label">{{ row.label }}</span>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width]="row.percent + '%'"></div>
+          </div>
+          <span class="bar-count">{{ row.count }}</span>
+        </div>
+      </div>
+      <div class="rating-platforms">
+        <div class="platform-item" *ngFor="let p of platforms">
+          <i [class]="p.icon" [style.color]="p.color"></i>
+          <span>{{ p.name }}</span>
+          <strong>{{ p.rating }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Carousel -->
+    <div class="carousel-wrap">
+      <div class="reviews-carousel" #carousel>
+        <div class="review-card"
+             *ngFor="let review of reviews; let i = index"
+             [class.active]="i === activeIndex"
+             [class.prev]="i === prevIndex"
+             [class.next]="i === nextIndex">
+          <div class="review-header">
+            <div class="reviewer-avatar">
+              <img [src]="review.avatar" [alt]="review.name" loading="lazy">
+            </div>
+            <div class="reviewer-info">
+              <h4>{{ review.name }}</h4>
+              <p class="reviewer-route">
+                <i class="fas fa-route"></i>
+                {{ review.route }}
+              </p>
+              <p class="reviewer-date">{{ review.date }}</p>
+            </div>
+            <div class="review-rating">
+              <div class="stars">
+                <i class="fas fa-star" *ngFor="let s of [1,2,3,4,5]"></i>
+              </div>
+              <span class="rating-badge">{{ review.rating }}/5</span>
+            </div>
+          </div>
+          <div class="review-body">
+            <i class="fas fa-quote-left review-quote-icon"></i>
+            <p>{{ review.text }}</p>
+          </div>
+          <div class="review-footer">
+            <div class="review-tags">
+                  <span class="review-tag" *ngFor="let tag of review.tags">
+                    <i class="fas fa-check"></i> {{ tag }}
+                  </span>
+            </div>
+            <div class="review-car">
+              <i class="fas fa-car"></i>
+              {{ review.carClass }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="carousel-controls">
+        <button class="carousel-btn carousel-btn--prev"
+                (click)="prevSlide()"
+                aria-label="Назад">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <div class="carousel-dots">
+          <button class="dot"
+                  *ngFor="let r of reviews; let i = index"
+                  [class.active]="i === activeIndex"
+                  (click)="goToSlide(i)"
+                  [attr.aria-label]="'Отзыв ' + (i + 1)">
+          </button>
+        </div>
+        <button class="carousel-btn carousel-btn--next"
+                (click)="nextSlide()"
+                aria-label="Вперёд">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- All reviews grid (visible on desktop) -->
+    <div class="reviews-grid">
+      <div class="review-card-mini reveal"
+           *ngFor="let review of reviews; let i = index"
+           [class]="'delay-' + (i % 3 + 1)"
+           #revealEl>
+        <div class="mini-header">
+          <img [src]="review.avatar" [alt]="review.name">
+          <div>
+            <h4>{{ review.name }}</h4>
+            <p>{{ review.route }}</p>
+          </div>
+          <div class="mini-stars">
+            <i class="fas fa-star" *ngFor="let s of [1,2,3,4,5]"></i>
+          </div>
+        </div>
+        <p class="mini-text">"{{ review.text }}"</p>
+        <div class="mini-footer">
+          <span class="mini-date">{{ review.date }}</span>
+          <span class="mini-car">
+                <i class="fas fa-car"></i> {{ review.carClass }}
+              </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom stats -->
+    <div class="reviews-bottom reveal" #revealEl>
+      <div class="review-stat" *ngFor="let stat of reviewStats">
+        <div class="review-stat-icon" [style.background]="stat.gradient">
+          <i [class]="stat.icon"></i>
+        </div>
+        <div>
+          <div class="review-stat-number">{{ stat.number }}</div>
+          <div class="review-stat-label">{{ stat.label }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
