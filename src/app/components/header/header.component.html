@@ -1,0 +1,115 @@
+<header class="header" [class.scrolled]="isScrolled" [class.menu-open]="menuOpen">
+  <div class="container">
+    <nav class="nav">
+      <!-- Logo -->
+      <a href="#home" class="logo" (click)="closeMenu()">
+        <div class="logo-icon">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <rect width="36" height="36" rx="10" fill="url(#logoGrad)"/>
+            <path d="M8 22 L14 15 L18 19 L24 11 L28 16"
+                  stroke="white" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="28" cy="16" r="2" fill="#d4af37"/>
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="36" y2="36">
+                <stop offset="0%" stop-color="#1a365d"/>
+                <stop offset="100%" stop-color="#2563eb"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <span class="logo-brand">АвтоДжет</span>
+          <span class="logo-city">СОЧИ</span>
+        </div>
+      </a>
+
+      <!-- Desktop Menu -->
+      <ul class="nav-menu">
+        <li><a href="#features" (click)="smoothScroll($event, 'features')">Преимущества</a></li>
+        <li><a href="#fleet" (click)="smoothScroll($event, 'fleet')">Автопарк</a></li>
+        <li><a href="#prices" (click)="smoothScroll($event, 'prices')">Цены</a></li>
+        <li *ngIf="isWideScreen"><a href="#reviews" (click)="smoothScroll($event, 'reviews')">Отзывы</a></li>
+        <li><a href="#contacts" (click)="smoothScroll($event, 'contacts')">Контакты</a></li>
+      </ul>
+
+      <!-- Actions -->
+      <div class="nav-actions">
+        <!-- Телефон (скрыт на мобильных) -->
+        <a href="tel:+79205994703" class="nav-phone hide-mobile">
+          <i class="fas fa-phone"></i>
+          +7 (920) 599-47-03
+        </a>
+
+        <!-- Социальные иконки -->
+        <div class="nav-socials">
+          <a href="https://t.me/your_telegram"
+             target="_blank"
+             class="social-icon social-icon--telegram"
+             title="Telegram">
+            <i class="fab fa-telegram-plane"></i>
+          </a>
+          <a href="https://wa.me/79205994703"
+             target="_blank"
+             class="social-icon social-icon--whatsapp"
+             title="WhatsApp">
+<!--            <i class="fab fa-whatsapp"></i>-->
+            <span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 720">
+            <path fill="#fff" d="M350.4,9.6C141.8,20.5,4.1,184.1,12.8,390.4c3.8,90.3,40.1,168,48.7,253.7,2.2,22.2-4.2,49.6,21.4,59.3,31.5,11.9,79.8-8.1,106.2-26.4,9-6.1,17.6-13.2,24.2-22,27.3,18.1,53.2,35.6,85.7,43.4,143.1,34.3,299.9-44.2,369.6-170.3C799.6,291.2,622.5-4.6,350.4,9.6h0ZM269.4,504c-11.3,8.8-22.2,20.8-34.7,27.7-18.1,9.7-23.7-.4-30.5-16.4-21.4-50.9-24-137.6-11.5-190.9,16.8-72.5,72.9-136.3,150-143.1,78-6.9,150.4,32.7,183.1,104.2,72.4,159.1-112.9,316.2-256.4,218.6h0Z"/>
+          </svg>
+          </span>
+<!--            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><linearGradient id="b"><stop offset="0" stop-color="#00f"/>-->
+<!--              <stop offset="1" stop-opacity="0"/></linearGradient><linearGradient id="a"><stop offset="0" stop-color="#4cf"/><stop offset=".662" stop-color="#53e"/><stop offset="1" stop-color="#93d"/></linearGradient><linearGradient id="c" x1="117.847" x2="1000" y1="760.536" y2="500" gradientUnits="userSpaceOnUse" href="#a"/><radialGradient id="d" cx="-87.392" cy="1166.116" r="500" fx="-87.392" fy="1166.116" gradientTransform="rotate(51.356 1551.478 559.3)scale(2.42703433 1)" gradientUnits="userSpaceOnUse" href="#b"/></defs><rect width="1000" height="1000" fill="url(#c)" ry="249.681"/><rect width="1000" height="1000" fill="url(#d)" ry="249.681"/><path fill="#fff" fill-rule="evenodd" d="M508.211 878.328c-75.007 0-109.864-10.95-170.453-54.75-38.325 49.275-159.686 87.783-164.979 21.9 0-49.456-10.95-91.248-23.36-136.873-14.782-56.21-31.572-118.807-31.572-209.508 0-216.626 177.754-379.597 388.357-379.597 210.785 0 375.947 171.001 375.947 381.604.707 207.346-166.595 376.118-373.94 377.224m3.103-571.585c-102.564-5.292-182.499 65.7-200.201 177.024-14.6 92.162 11.315 204.398 33.397 210.238 10.585 2.555 37.23-18.98 53.837-35.587a189.8 189.8 0 0 0 92.71 33.032c106.273 5.112 197.08-75.794 204.215-181.95 4.154-106.382-77.67-196.486-183.958-202.574Z" clip-rule="evenodd"/>-->
+<!--            </svg>-->
+          </a>
+        </div>
+
+        <!-- Burger -->
+        <button class="burger"
+                (click)="toggleMenu()"
+                [class.active]="menuOpen"
+                aria-label="Меню">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" [class.open]="menuOpen">
+    <ul>
+      <li><a href="#features" (click)="smoothScroll($event, 'features')">Преимущества</a></li>
+      <li><a href="#fleet" (click)="smoothScroll($event, 'fleet')">Автопарк</a></li>
+      <li><a href="#prices" (click)="smoothScroll($event, 'prices')">Цены</a></li>
+      <li *ngIf="isWideScreen"><a href="#reviews" (click)="smoothScroll($event, 'reviews')">Отзывы</a></li>
+      <li><a href="#contacts" (click)="smoothScroll($event, 'contacts')">Контакты</a></li>
+    </ul>
+    <div class="mobile-menu-contacts">
+      <a href="tel:+79205994703" class="btn btn-outline">
+        <i class="fas fa-phone"></i> +7 (920) 599-47-03
+      </a>
+      <div class="mobile-socials">
+        <a href="https://t.me/your_telegram" target="_blank" class="btn btn-telegram">
+          <i class="fab fa-telegram-plane"></i> Telegram
+        </a>
+        <a href="https://wa.me/79205994703" target="_blank" class="btn btn-whatsapp">
+<!--          <i class="fab fa-whatsapp"></i> WhatsApp-->
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 720">
+            <path fill="#fff" d="M350.4,9.6C141.8,20.5,4.1,184.1,12.8,390.4c3.8,90.3,40.1,168,48.7,253.7,2.2,22.2-4.2,49.6,21.4,59.3,31.5,11.9,79.8-8.1,106.2-26.4,9-6.1,17.6-13.2,24.2-22,27.3,18.1,53.2,35.6,85.7,43.4,143.1,34.3,299.9-44.2,369.6-170.3C799.6,291.2,622.5-4.6,350.4,9.6h0ZM269.4,504c-11.3,8.8-22.2,20.8-34.7,27.7-18.1,9.7-23.7-.4-30.5-16.4-21.4-50.9-24-137.6-11.5-190.9,16.8-72.5,72.9-136.3,150-143.1,78-6.9,150.4,32.7,183.1,104.2,72.4,159.1-112.9,316.2-256.4,218.6h0Z"/>
+          </svg>
+          </span>
+        MAX
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Overlay -->
+<div class="menu-overlay"
+     [class.visible]="menuOpen"
+     (click)="closeMenu()"></div>

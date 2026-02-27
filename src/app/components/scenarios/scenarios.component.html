@@ -1,0 +1,232 @@
+<section class="scenarios-section" id="scenarios">
+  <!-- Background -->
+  <div class="scenarios-bg">
+    <div class="bg-gradient"></div>
+    <div class="bg-pattern"></div>
+  </div>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="section-header section-header--light reveal" #revealEl>
+      <span class="section-tag">
+        <i class="fas fa-film"></i>
+        Сценарии вашего отдыха
+      </span>
+      <h2 class="section-title">Сочи, который вы не знали</h2>
+      <div class="accent-line"></div>
+      <p class="section-subtitle">
+        Мы не проводим скучные экскурсии «по расписанию». Мы создаём кинематографичные сценарии вашего пребывания, адаптированные под ваше настроение.
+      </p>
+    </div>
+
+    <!-- Scenarios Grid -->
+    <div class="scenarios-grid">
+      <div
+        class="scenario-card reveal"
+        *ngFor="let scenario of scenarios; let i = index"
+        [class]="'delay-' + (i % 4 + 1)"
+        [class.scenario-card--highlight]="scenario.highlight"
+        #revealEl>
+
+        <!-- Card Background -->
+        <div class="scenario-bg-wrap">
+          <img [src]="scenario.image" [alt]="scenario.name" class="scenario-bg-img">
+          <div class="scenario-overlay" [style.background]="scenario.gradient + ', transparent'"></div>
+        </div>
+
+        <!-- Card Content -->
+        <div class="scenario-content">
+          <!-- Header -->
+          <div class="scenario-header">
+            <div class="scenario-icon" [style.background]="scenario.gradient">
+              <i [class]="scenario.icon"></i>
+            </div>
+            <div class="scenario-titles">
+              <span class="scenario-subtitle">{{ scenario.subtitle }}</span>
+              <h3 class="scenario-name">{{ scenario.name }}</h3>
+            </div>
+          </div>
+
+          <!-- Tagline -->
+          <p class="scenario-tagline">{{ scenario.tagline }}</p>
+
+          <!-- Description -->
+          <p class="scenario-description">{{ scenario.description }}</p>
+
+          <!-- Features -->
+          <div class="scenario-features">
+            <div class="feature-item" *ngFor="let feature of scenario.features">
+              <div class="feature-icon">
+                <i [class]="feature.icon"></i>
+              </div>
+              <div class="feature-text">
+                <span class="feature-title">{{ feature.title }}</span>
+                <span class="feature-desc">{{ feature.description }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <button class="btn-scenario" (click)="openPopup(scenario)">
+            <span>Выбрать сценарий</span>
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- Highlight Badge -->
+        <div class="highlight-badge" *ngIf="scenario.highlight">
+          <i class="fas fa-crown"></i>
+          Рекомендуем
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="scenarios-cta reveal" #revealEl>
+      <div class="cta-content">
+        <div class="cta-icon">
+          <i class="fas fa-magic"></i>
+        </div>
+        <div class="cta-text">
+          <h3>Хотите уникальный сценарий?</h3>
+          <p>Расскажите о своих мечтах — мы создадим персональную программу специально для вас</p>
+        </div>
+        <a href="https://wa.me/79001234567" target="_blank" class="btn btn-gold">
+          <i class="fab fa-whatsapp"></i>
+          Обсудить идею
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Попап заявки -->
+<div class="popup-overlay" *ngIf="isPopupOpen" (click)="closePopup()">
+  <div class="popup-wrap" (click)="$event.stopPropagation()">
+
+    <!-- Кнопка закрытия -->
+    <button class="popup-close" (click)="closePopup()">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <!-- Контент до отправки -->
+    <div class="popup-content" *ngIf="!isSubmitted && selectedScenario">
+
+      <!-- Шапка с фото -->
+      <div class="popup-header">
+        <div class="popup-header-bg">
+          <img [src]="selectedScenario.image" [alt]="selectedScenario.name">
+          <div class="popup-header-overlay" [style.background]="selectedScenario.gradient"></div>
+        </div>
+        <div class="popup-header-content">
+          <div class="popup-icon" [style.background]="selectedScenario.gradient">
+            <i [class]="selectedScenario.icon"></i>
+          </div>
+          <span class="popup-subtitle">{{ selectedScenario.subtitle }}</span>
+          <h3 class="popup-title">{{ selectedScenario.name }}</h3>
+          <p class="popup-tagline">{{ selectedScenario.tagline }}</p>
+        </div>
+      </div>
+
+      <!-- Что входит -->
+      <div class="popup-features">
+        <div class="popup-features-title">
+          <i class="fas fa-check-circle"></i>
+          Что входит в сценарий
+        </div>
+        <ul class="popup-features-list">
+          <li *ngFor="let feature of selectedScenario.features">
+            <i [class]="feature.icon"></i>
+            <div>
+              <strong>{{ feature.title }}</strong>
+              <span>{{ feature.description }}</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Форма -->
+      <form class="popup-form" (ngSubmit)="submitOrder()">
+        <div class="form-title">Оставить заявку</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>
+              <i class="fas fa-user"></i>
+              Имя
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Ваше имя"
+              [(ngModel)]="orderName"
+              name="orderName"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <i class="fas fa-phone"></i>
+              Телефон
+            </label>
+            <input
+              type="tel"
+              class="form-control"
+              placeholder="+7 (___) ___-__-__"
+              [(ngModel)]="orderPhone"
+              name="orderPhone"
+              required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <i class="fas fa-calendar"></i>
+            Желаемая дата
+          </label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="orderDate"
+            name="orderDate">
+        </div>
+
+        <div class="form-group">
+          <label>
+            <i class="fas fa-comment"></i>
+            Комментарий
+          </label>
+          <textarea
+            class="form-control form-textarea"
+            placeholder="Расскажите о ваших пожеланиях..."
+            [(ngModel)]="orderComment"
+            name="orderComment"
+            rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-submit" [style.background]="selectedScenario.gradient">
+          <i class="fas fa-paper-plane"></i>
+          Отправить заявку
+        </button>
+      </form>
+    </div>
+
+    <!-- Успешная отправка -->
+    <div class="form-success" *ngIf="isSubmitted && selectedScenario">
+      <div class="success-icon" [style.background]="selectedScenario.gradient">
+        <i class="fas fa-check"></i>
+      </div>
+      <h3>Заявка отправлена!</h3>
+      <p class="success-scenario">
+        Сценарий: <strong>{{ selectedScenario.name }}</strong>
+      </p>
+      <p class="success-note">
+        Наш менеджер свяжется с вами в ближайшее время для уточнения деталей
+      </p>
+      <button class="btn btn-outline" (click)="closePopup()">
+        Закрыть
+      </button>
+    </div>
+
+  </div>
+</div>

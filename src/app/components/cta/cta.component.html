@@ -1,0 +1,209 @@
+<section class="cta-section">
+  <!-- Animated background -->
+  <div class="cta-bg">
+    <img
+      src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80&auto=format&fit=crop"
+      alt="Горы Сочи"
+      class="cta-bg-img">
+    <div class="cta-overlay"></div>
+    <div class="cta-circles">
+      <div class="cta-circle cta-circle--1"></div>
+      <div class="cta-circle cta-circle--2"></div>
+      <div class="cta-circle cta-circle--3"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="cta-inner">
+      <!-- Left content -->
+      <div class="cta-content reveal reveal-left" #revealEl>
+        <div class="cta-badge">
+          <i class="fas fa-bolt"></i>
+          Быстрое бронирование
+        </div>
+
+        <h2 class="cta-title">
+          Забронируйте трансфер<br>
+          <span class="cta-accent">за 2 минуты</span>
+        </h2>
+
+        <p class="cta-subtitle">
+          Ваш отдых начинается с комфортной дороги.<br>
+          Мы позаботимся обо всём остальном.
+        </p>
+
+        <div class="cta-guarantees">
+          <div class="guarantee-item" *ngFor="let g of guarantees">
+            <div class="guarantee-icon">
+              <i [class]="g.icon"></i>
+            </div>
+            <span>{{ g.text }}</span>
+          </div>
+        </div>
+
+        <div class="cta-actions">
+          <a href="https://wa.me/78620000000"
+             target="_blank"
+             class="btn btn-whatsapp btn-lg">
+<!--            <i class="fab fa-whatsapp"></i>-->
+            <span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 720">
+            <path fill="#fff" d="M350.4,9.6C141.8,20.5,4.1,184.1,12.8,390.4c3.8,90.3,40.1,168,48.7,253.7,2.2,22.2-4.2,49.6,21.4,59.3,31.5,11.9,79.8-8.1,106.2-26.4,9-6.1,17.6-13.2,24.2-22,27.3,18.1,53.2,35.6,85.7,43.4,143.1,34.3,299.9-44.2,369.6-170.3C799.6,291.2,622.5-4.6,350.4,9.6h0ZM269.4,504c-11.3,8.8-22.2,20.8-34.7,27.7-18.1,9.7-23.7-.4-30.5-16.4-21.4-50.9-24-137.6-11.5-190.9,16.8-72.5,72.9-136.3,150-143.1,78-6.9,150.4,32.7,183.1,104.2,72.4,159.1-112.9,316.2-256.4,218.6h0Z"/>
+          </svg>
+          </span>
+            Написать в MAX
+          </a>
+          <a href="tel:+78620000000" class="btn btn-secondary btn-lg">
+            <i class="fas fa-phone"></i>
+            +7 (920) 599-47-03
+          </a>
+        </div>
+      </div>
+
+      <!-- Right form -->
+      <div class="cta-form-wrap reveal reveal-right" #revealEl>
+        <div class="cta-form glass">
+          <div class="form-header">
+            <h3>Оставить заявку</h3>
+            <p>Ответим в течение 5 минут</p>
+          </div>
+
+          <form (ngSubmit)="submitForm()" #f="ngForm">
+            <div class="form-group-cta">
+              <label>Ваше имя</label>
+              <div class="input-wrap">
+                <i class="fas fa-user"></i>
+                <input
+                  type="text"
+                  [(ngModel)]="ctaForm.name"
+                  name="name"
+                  placeholder="Иван Иванов"
+                  class="cta-input"
+                  required>
+              </div>
+            </div>
+
+            <div class="form-group-cta">
+              <label>Номер телефона</label>
+              <div class="input-wrap">
+                <i class="fas fa-phone"></i>
+                <input
+                  type="tel"
+                  [(ngModel)]="ctaForm.phone"
+                  name="phone"
+                  placeholder="+7 (___) ___-__-__"
+                  class="cta-input"
+                  required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group-cta">
+                <label>Откуда</label>
+                <div class="input-wrap">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <select [(ngModel)]="ctaForm.from" name="from" class="cta-input" required>
+                    <option value="">Выберите</option>
+                    <option>Аэропорт Сочи</option>
+                    <option>Жд вокзал Сочи</option>
+                    <option>Центр Сочи</option>
+                    <option>Красная Поляна</option>
+                    <option>Роза Хутор</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group-cta">
+                <label>Куда</label>
+                <div class="input-wrap">
+                  <i class="fas fa-map-pin"></i>
+                  <select [(ngModel)]="ctaForm.to" name="to" class="cta-input" required>
+                    <option value="">Выберите</option>
+                    <option>Адлер</option>
+                    <option>Красная Поляна</option>
+                    <option>Роза Хутор</option>
+                    <option>Центр Сочи</option>
+                    <option>Лазаревское</option>
+                    <option>Олимпийский парк</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group-cta">
+                <label>Дата</label>
+                <div class="input-wrap">
+                  <i class="fas fa-calendar"></i>
+                  <input
+                    type="date"
+                    [(ngModel)]="ctaForm.date"
+                    name="date"
+                    class="cta-input"
+                    [min]="today"
+                    required>
+                </div>
+              </div>
+
+              <div class="form-group-cta">
+                <label>Пассажиров</label>
+                <div class="input-wrap">
+                  <i class="fas fa-users"></i>
+                  <select [(ngModel)]="ctaForm.passengers" name="passengers" class="cta-input">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7+</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group-cta">
+              <label>Комментарий (необязательно)</label>
+              <div class="input-wrap input-wrap--textarea">
+                <i class="fas fa-comment"></i>
+                <textarea
+                  [(ngModel)]="ctaForm.comment"
+                  name="comment"
+                  placeholder="Номер рейса, детское кресло, пожелания..."
+                  class="cta-input cta-textarea"
+                  rows="2">
+                    </textarea>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg cta-submit">
+              <i class="fas fa-paper-plane"></i>
+              Оставить заявку
+            </button>
+
+            <p class="form-note">
+              <i class="fas fa-lock"></i>
+              Нажимая кнопку, вы соглашаетесь с
+              <a href="#">политикой конфиденциальности</a>
+            </p>
+          </form>
+        </div>
+
+        <!-- Success message -->
+        <div class="form-success" *ngIf="submitted">
+          <div class="success-icon">
+            <i class="fas fa-check"></i>
+          </div>
+          <h3>Заявка отправлена!</h3>
+          <p>Мы свяжемся с вами в течение 5 минут</p>
+          <a href="https://wa.me/78620000000"
+             target="_blank"
+             class="btn btn-whatsapp btn-lg">
+            <i class="fab fa-whatsapp"></i>
+            Написать в WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

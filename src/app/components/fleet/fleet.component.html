@@ -1,0 +1,207 @@
+<section class="fleet-section" id="fleet">
+  <!-- Background decoration -->
+  <div class="fleet-bg-deco">
+    <div class="deco-circle deco-1"></div>
+    <div class="deco-circle deco-2"></div>
+  </div>
+
+  <div class="container">
+    <div class="section-header reveal" #revealEl>
+      <span class="section-tag">Наш автопарк</span>
+      <h2 class="section-title">Выберите свой автомобиль</h2>
+      <div class="accent-line"></div>
+    </div>
+
+    <!-- Карточки автомобилей -->
+    <div class="fleet-grid" [class.single-car]="cars.length === 1">
+      <div
+        class="fleet-card reveal"
+        *ngFor="let car of cars; let i = index"
+        [class.fleet-card--featured]="car.featured"
+        #revealEl>
+
+        <!-- Featured badge -->
+        <div class="featured-badge" *ngIf="car.featured">
+          <i class="fas fa-crown"></i> Рекомендуем
+        </div>
+
+        <!-- Галерея фото -->
+        <div class="car-gallery">
+          <div class="gallery-main">
+            <img
+              [src]="car.images[car.activeImage || 0]"
+              [alt]="car.name"
+              class="gallery-main-img"
+              loading="lazy">
+            <div class="car-class-badge" [style.background]="car.gradient">
+              {{ car.class }}
+            </div>
+
+            <!-- Навигация по фото -->
+            <button
+              class="gallery-nav gallery-nav--prev"
+              (click)="prevImage(car)"
+              *ngIf="car.images.length > 1">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button
+              class="gallery-nav gallery-nav--next"
+              (click)="nextImage(car)"
+              *ngIf="car.images.length > 1">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+
+          <!-- Превью фото -->
+          <div class="gallery-thumbs" *ngIf="car.images.length > 1">
+            <button
+              class="gallery-thumb"
+              *ngFor="let img of car.images; let imgIndex = index"
+              [class.active]="(car.activeImage || 0) === imgIndex"
+              (click)="setActiveImage(car, imgIndex)">
+              <img [src]="img" [alt]="car.name + ' фото ' + (imgIndex + 1)">
+              <span class="thumb-label">{{ car.imageLabels?.[imgIndex] || '' }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Car info -->
+        <div class="car-info">
+          <div class="car-header">
+            <div>
+              <h3 class="car-name">{{ car.name }}</h3>
+              <p class="car-model">{{ car.model }}</p>
+            </div>
+            <div class="car-price">
+              <span class="price-from">от</span>
+              <span class="price-value">{{ car.price }}</span>
+            </div>
+          </div>
+
+          <!-- Описание -->
+          <p class="car-description" *ngIf="car.description">
+            {{ car.description }}
+          </p>
+
+          <div class="car-specs">
+            <div class="spec-item" *ngFor="let spec of car.specs">
+              <i [class]="spec.icon"></i>
+              <span>{{ spec.text }}</span>
+            </div>
+          </div>
+
+          <div class="car-features">
+            <span class="car-feature" *ngFor="let feat of car.features">
+              <i class="fas fa-check"></i>
+              {{ feat }}
+            </span>
+          </div>
+
+          <a [href]="'https://wa.me/' + whatsappNumber + '?text=' + getWhatsAppText(car)"
+             target="_blank"
+             class="btn btn-select"
+             [class.btn-primary]="car.featured"
+             [class.btn-outline]="!car.featured">
+            <i class="fab fa-whatsapp"></i>
+            Забронировать
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Блок "Скоро в автопарке" если только 1 авто -->
+    <div class="coming-soon" *ngIf="cars.length === 1">
+      <div class="coming-soon-content">
+        <i class="fas fa-car-side"></i>
+        <h3>Скоро в автопарке</h3>
+        <p>Мы расширяем наш автопарк. Следите за обновлениями!</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+
+<!--<section class="fleet-section">-->
+<!--  &lt;!&ndash; Background decoration &ndash;&gt;-->
+<!--  <div class="fleet-bg-deco">-->
+<!--    <div class="deco-circle deco-1"></div>-->
+<!--    <div class="deco-circle deco-2"></div>-->
+<!--  </div>-->
+
+<!--  <div class="container">-->
+<!--    <div class="section-header reveal" #revealEl>-->
+<!--      <span class="section-tag">Наш автопарк</span>-->
+<!--      <h2 class="section-title">Выберите свой автомобиль</h2>-->
+<!--      <div class="accent-line"></div>-->
+<!--&lt;!&ndash;      <p class="section-subtitle">&ndash;&gt;-->
+<!--&lt;!&ndash;        Чистые, современные автомобили для любого случая и бюджета&ndash;&gt;-->
+<!--&lt;!&ndash;      </p>&ndash;&gt;-->
+<!--    </div>-->
+
+<!--    <div class="fleet-grid">-->
+<!--      <div class="fleet-card reveal"-->
+<!--           *ngFor="let car of cars; let i = index"-->
+<!--           [class]="'delay-' + (i + 1)"-->
+<!--           [class.fleet-card&#45;&#45;featured]="car.featured"-->
+<!--           #revealEl>-->
+
+<!--        &lt;!&ndash; Featured badge &ndash;&gt;-->
+<!--        <div class="featured-badge" *ngIf="car.featured">-->
+<!--          <i class="fas fa-fire"></i> Популярный выбор-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Car image &ndash;&gt;-->
+<!--        <div class="car-image-wrap">-->
+<!--          <img [src]="car.image"-->
+<!--               [alt]="car.name"-->
+<!--               class="car-image"-->
+<!--               loading="lazy">-->
+<!--          <div class="car-class-badge" [style.background]="car.gradient">-->
+<!--            {{ car.class }}-->
+<!--          </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Car info &ndash;&gt;-->
+<!--        <div class="car-info">-->
+<!--          <div class="car-header">-->
+<!--            <div>-->
+<!--              <h3 class="car-name">{{ car.name }}</h3>-->
+<!--              <p class="car-model">{{ car.model }}</p>-->
+<!--            </div>-->
+<!--            <div class="car-price">-->
+<!--              <span class="price-from">от</span>-->
+<!--              <span class="price-value">{{ car.price }}</span>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <div class="car-specs">-->
+<!--            <div class="spec-item" *ngFor="let spec of car.specs">-->
+<!--              <i [class]="spec.icon"></i>-->
+<!--              <span>{{ spec.text }}</span>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <div class="car-features">-->
+<!--                <span class="car-feature" *ngFor="let feat of car.features">-->
+<!--                  <i class="fas fa-check"></i>-->
+<!--                  {{ feat }}-->
+<!--                </span>-->
+<!--          </div>-->
+
+<!--          <a href="https://wa.me/78620000000"-->
+<!--             target="_blank"-->
+<!--             class="btn btn-select"-->
+<!--             [class.btn-primary]="car.featured"-->
+<!--             [class.btn-outline]="!car.featured">-->
+<!--            <i class="fas fa-car"></i>-->
+<!--            Выбрать {{ car.class }}-->
+<!--          </a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->

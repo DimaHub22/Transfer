@@ -1,0 +1,138 @@
+<section class="hero">
+  <!-- Background -->
+  <div class="hero-bg">
+<!--    src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1920&q=80&auto=format&fit=crop"-->
+<!--    src="https://img5.lalafo.com/i/posters/original/43/25/52/854faf021fc73e2ad0b123a0a6.jpeg"-->
+    <img
+      src="assets/car/wey%2080.webp"
+
+      alt="Сочи море и горы"
+      class="hero-bg-img"
+      loading="eager">
+    <div class="hero-overlay"></div>
+    <div class="hero-particles">
+          <span *ngFor="let p of particles"
+                class="particle"
+                [style.width.px]="p.size"
+                [style.height.px]="p.size"
+                [style.left]="p.left"
+                [style.animationDelay]="p.delay"
+                [style.animationDuration]="p.duration"></span>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="container hero-container">
+    <div class="hero-content">
+      <!-- Badge -->
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Работаем 24/7 — всегда на связи
+      </div>
+
+      <!-- Heading -->
+      <h1 class="hero-title">
+        Комфортный<br>
+        <span class="accent-text">трансфер</span><br>
+        в Сочи
+      </h1>
+
+<!--      <p class="hero-subtitle">-->
+<!--        Встреча с табличкой · Фиксированная цена · Детские кресла-->
+<!--      </p>-->
+
+      <!-- Booking Form -->
+      <div class="hero-form glass">
+        <div class="form-title">
+          <i class="fas fa-route"></i>
+          Рассчитайте стоимость поездки
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>
+              <i class="fas fa-map-marker-alt"></i>
+              Откуда
+            </label>
+            <select [(ngModel)]="form.from" class="form-control">
+              <option value="">Выберите место</option>
+              <option>Аэропорт Сочи (Адлер)</option>
+              <option>Жд вокзал Сочи</option>
+              <option>Центр Сочи</option>
+              <option>Красная Поляна</option>
+              <option>Роза Хутор</option>
+              <option>Олимпийский парк</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <i class="fas fa-map-pin"></i>
+              Куда
+            </label>
+            <select [(ngModel)]="form.to" class="form-control">
+              <option value="">Выберите место</option>
+              <option>Адлер</option>
+              <option>Красная Поляна</option>
+              <option>Роза Хутор</option>
+              <option>Центр Сочи</option>
+              <option>Лазаревское</option>
+              <option>Олимпийский парк</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <i class="fas fa-calendar"></i>
+              Дата
+            </label>
+            <input type="date"
+                   [(ngModel)]="form.date"
+                   class="form-control"
+                   [min]="today">
+          </div>
+
+          <div class="form-group">
+            <label>
+              <i class="fas fa-clock"></i>
+              Время
+            </label>
+            <input type="time"
+                   [(ngModel)]="form.time"
+                   class="form-control">
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-lg form-submit"
+                (click)="calculatePrice()">
+          <i class="fas fa-calculator"></i>
+          Рассчитать стоимость
+        </button>
+      </div>
+
+      <!-- Badges -->
+      <div class="hero-badges">
+        <div class="hero-badge-item" *ngFor="let badge of badges">
+          <i [class]="badge.icon"></i>
+          {{ badge.text }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="hero-stats">
+      <div class="stat-item" *ngFor="let stat of stats">
+        <div class="stat-number">{{ stat.number }}</div>
+        <div class="stat-label">{{ stat.label }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+<!--  <div class="scroll-indicator">-->
+<!--    <span>Листайте вниз</span>-->
+<!--    <div class="scroll-line">-->
+<!--      <div class="scroll-dot"></div>-->
+<!--    </div>-->
+<!--  </div>-->
+</section>

@@ -1,0 +1,180 @@
+<!-- Главная секция на весь экран -->
+<section class="hero">
+  <!-- Фон -->
+  <div class="hero-bg">
+    <img
+      src="https://i.pinimg.com/originals/b4/23/aa/b423aac7db14267264fdd8c6ec36485b.jpg?nii=t"
+      alt="Сочи море и горы"
+      class="hero-bg-img"
+      loading="eager">
+  </div>
+
+  <!-- Оверлей -->
+  <div class="hero-overlay"></div>
+
+  <!-- Контент -->
+  <div class="hero-content">
+<!--    <h1 class="hero-title">Сочинский закат</h1>-->
+    <h2 class="hero-subtitle">Премиум трансфер по побережью Чёрного моря</h2>
+
+    <button class="btn-go" (click)="openPopup()">
+      <i class="fa-solid fa-rocket"></i>
+      Поехали
+    </button>
+  </div>
+
+  <!-- Скролл индикатор -->
+  <div class="scroll-indicator">
+    <span>Листайте вниз</span>
+    <div class="scroll-line">
+      <div class="scroll-dot"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Попап -->
+<div class="popup-overlay" *ngIf="isPopupOpen" (click)="closePopup()">
+  <div class="popup-wrap" (click)="$event.stopPropagation()">
+
+    <!-- Кнопка закрытия -->
+    <button class="popup-close" (click)="closePopup()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <!-- Табы -->
+    <div class="popup-tabs">
+      <button
+        class="popup-tab"
+        [class.active]="activeTab === 'callback'"
+        (click)="switchTab('callback')">
+        <i class="fa-solid fa-phone"></i>
+        Обратный звонок
+      </button>
+      <button
+        class="popup-tab"
+        [class.active]="activeTab === 'autojet'"
+        (click)="switchTab('autojet')">
+        <i class="fa-solid fa-car"></i>
+        Заказать АвтоДжет
+      </button>
+    </div>
+
+    <!-- Форма обратного звонка -->
+    <form
+      *ngIf="activeTab === 'callback' && !isSubmitted"
+      class="popup-form"
+      (ngSubmit)="submitCallback()">
+
+      <div class="form-header">
+        <h3>Обратный звонок</h3>
+        <p>Оставьте контакты, и мы перезвоним вам</p>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <i class="fa-solid fa-user"></i>
+          Ваше имя
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Введите имя"
+          [(ngModel)]="callbackName"
+          name="callbackName"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <i class="fa-solid fa-phone"></i>
+          Телефон
+        </label>
+        <input
+          type="tel"
+          class="form-control"
+          placeholder="+7 (___) ___-__-__"
+          [(ngModel)]="callbackPhone"
+          name="callbackPhone"
+          required>
+      </div>
+
+      <button type="submit" class="btn btn--primary form-submit">
+        <i class="fa-solid fa-paper-plane"></i>
+        Перезвоните мне
+      </button>
+    </form>
+
+    <!-- Форма заказа АвтоДжет -->
+    <form
+      *ngIf="activeTab === 'autojet' && !isSubmitted"
+      class="popup-form"
+      (ngSubmit)="submitAutojet()">
+
+      <div class="form-header">
+        <h3>Заказать АвтоДжет</h3>
+        <p>Укажите данные для бронирования</p>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <i class="fa-solid fa-user"></i>
+          Ваше имя
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Введите имя"
+          [(ngModel)]="autojetName"
+          name="autojetName"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <i class="fa-solid fa-phone"></i>
+          Телефон
+        </label>
+        <input
+          type="tel"
+          class="form-control"
+          placeholder="+7 (___) ___-__-__"
+          [(ngModel)]="autojetPhone"
+          name="autojetPhone"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <i class="fa-solid fa-clock"></i>
+          Время аренды
+        </label>
+        <select
+          class="form-control"
+          [(ngModel)]="autojetHours"
+          name="autojetHours">
+          <option *ngFor="let h of hoursOptions" [value]="h">
+            {{ getHoursLabel(h) }}
+          </option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn--primary form-submit">
+        <i class="fa-solid fa-check"></i>
+        Забронировать
+      </button>
+    </form>
+
+    <!-- Успешная отправка -->
+    <div class="form-success" *ngIf="isSubmitted">
+      <div class="success-icon">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <h3>Заявка отправлена!</h3>
+      <p>Мы свяжемся с вами в ближайшее время</p>
+      <button class="btn btn--outline" (click)="closePopup()">
+        Закрыть
+      </button>
+    </div>
+
+  </div>
+</div>

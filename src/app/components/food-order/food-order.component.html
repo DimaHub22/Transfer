@@ -1,0 +1,267 @@
+<section class="food-section" id="food">
+  <!-- Background decoration -->
+  <div class="food-bg-deco">
+    <div class="deco-circle deco-1"></div>
+    <div class="deco-circle deco-2"></div>
+  </div>
+
+  <div class="container">
+    <div class="section-header reveal" #revealEl>
+      <span class="section-tag">
+        <i class="fas fa-utensils"></i>
+        Еда с собой
+      </span>
+      <h2 class="section-title">Готовые наборы в дорогу</h2>
+      <div class="accent-line"></div>
+      <p class="section-subtitle">
+        Выгодные сеты от лучших ресторанов Сочи — вкусно, сытно и с экономией
+      </p>
+    </div>
+
+    <!-- Sets Grid -->
+    <div class="food-grid">
+      <div
+        class="set-card reveal"
+        *ngFor="let set of foodSets; let i = index"
+        [class]="'delay-' + (i % 3 + 1)"
+        [class.set-card--popular]="set.isPopular"
+        #revealEl>
+
+        <!-- Badges -->
+        <div class="set-badges">
+          <span class="set-badge set-badge--discount" *ngIf="set.discount">
+            -{{ set.discount }}%
+          </span>
+          <span class="set-badge set-badge--popular" *ngIf="set.isPopular">
+            <i class="fas fa-fire"></i> Хит
+          </span>
+          <span class="set-badge set-badge--new" *ngIf="set.isNew">
+            <i class="fas fa-star"></i> Новинка
+          </span>
+        </div>
+
+        <!-- Image -->
+        <div class="set-image-wrap">
+          <img
+            [src]="set.image"
+            [alt]="set.name"
+            class="set-image"
+            loading="lazy">
+          <div class="set-category">{{ set.category }}</div>
+          <div class="set-persons">
+            <i class="fas fa-users"></i>
+            {{ set.persons }}
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="set-info">
+          <h3 class="set-name">{{ set.name }}</h3>
+          <p class="set-description">{{ set.description }}</p>
+
+          <!-- Состав сета -->
+          <div class="set-items">
+            <div class="set-items-header">
+              <i class="fas fa-list-ul"></i>
+              В наборе:
+            </div>
+            <ul class="set-items-list">
+              <li *ngFor="let item of set.items">
+                <span class="item-name">{{ item.name }}</span>
+                <span class="item-portion">{{ item.portion }}</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Цена и кнопка -->
+          <div class="set-footer">
+            <div class="set-price">
+              <span class="price-old" *ngIf="set.oldPrice">{{ formatPrice(set.oldPrice) }}</span>
+              <span class="price-current">{{ formatPrice(set.price) }}</span>
+            </div>
+
+            <button class="btn-order" (click)="openOrderPopup(set)">
+              <i class="fas fa-shopping-bag"></i>
+              Заказать
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA - Полное меню -->
+    <div class="food-cta reveal" #revealEl>
+      <div class="food-cta-inner">
+        <div class="cta-icon">
+          <i class="fas fa-book-open"></i>
+        </div>
+        <div class="cta-text">
+          <h3>Хотите собрать свой набор?</h3>
+          <p>Откройте полное меню и выберите любые блюда на ваш вкус</p>
+        </div>
+        <a
+          [href]="menuLink"
+          target="_blank"
+          class="btn btn-primary btn-lg">
+          <i class="fas fa-external-link-alt"></i>
+          Открыть меню
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Попап заказа -->
+<div class="popup-overlay" *ngIf="isPopupOpen" (click)="closePopup()">
+  <div class="popup-wrap" (click)="$event.stopPropagation()">
+
+    <!-- Кнопка закрытия -->
+    <button class="popup-close" (click)="closePopup()">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <!-- Контент до отправки -->
+    <div class="popup-content" *ngIf="!isSubmitted && selectedSet">
+
+      <!-- Фото и инфо о сете -->
+      <div class="popup-set">
+        <div class="popup-set-image">
+          <img [src]="selectedSet.image" [alt]="selectedSet.name">
+          <span class="popup-discount" *ngIf="selectedSet.discount">
+            -{{ selectedSet.discount }}%
+          </span>
+        </div>
+        <div class="popup-set-info">
+          <span class="popup-category">{{ selectedSet.category }}</span>
+          <h3 class="popup-set-name">{{ selectedSet.name }}</h3>
+          <p class="popup-set-desc">{{ selectedSet.description }}</p>
+          <div class="popup-set-meta">
+            <span class="popup-persons">
+              <i class="fas fa-users"></i>
+              {{ selectedSet.persons }}
+            </span>
+            <div class="popup-price">
+              <span class="price-old" *ngIf="selectedSet.oldPrice">
+                {{ formatPrice(selectedSet.oldPrice) }}
+              </span>
+              <span class="price-current">{{ formatPrice(selectedSet.price) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Состав сета в попапе -->
+      <div class="popup-items">
+        <div class="popup-items-header">
+          <i class="fas fa-check-circle"></i>
+          Состав набора
+        </div>
+        <ul class="popup-items-list">
+          <li *ngFor="let item of selectedSet.items">
+            <i class="fas fa-check"></i>
+            <span class="item-name">{{ item.name }}</span>
+            <span class="item-portion">{{ item.portion }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Форма заказа -->
+      <form class="popup-form" (ngSubmit)="submitOrder()">
+        <div class="form-header">
+          <h4>Оформление заказа</h4>
+        </div>
+
+        <!-- Количество -->
+        <div class="form-group">
+          <label>
+            <i class="fas fa-layer-group"></i>
+            Количество сетов
+          </label>
+          <div class="quantity-control">
+            <button
+              type="button"
+              class="qty-btn"
+              (click)="changeQuantity(-1)"
+              [disabled]="orderQuantity <= 1">
+              <i class="fas fa-minus"></i>
+            </button>
+            <span class="qty-value">{{ orderQuantity }}</span>
+            <button
+              type="button"
+              class="qty-btn"
+              (click)="changeQuantity(1)"
+              [disabled]="orderQuantity >= 10">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Имя -->
+        <div class="form-group">
+          <label>
+            <i class="fas fa-user"></i>
+            Ваше имя
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Введите имя"
+            [(ngModel)]="orderName"
+            name="orderName"
+            required>
+        </div>
+
+        <!-- Телефон -->
+        <div class="form-group">
+          <label>
+            <i class="fas fa-phone"></i>
+            Телефон
+          </label>
+          <input
+            type="tel"
+            class="form-control"
+            placeholder="+7 (___) ___-__-__"
+            [(ngModel)]="orderPhone"
+            name="orderPhone"
+            required>
+        </div>
+
+        <!-- Итого -->
+        <div class="order-summary">
+          <div class="summary-row" *ngIf="getSavings() > 0">
+            <span class="summary-label">Ваша экономия:</span>
+            <span class="summary-savings">-{{ formatPrice(getSavings()) }}</span>
+          </div>
+          <div class="summary-row summary-total">
+            <span class="summary-label">Итого:</span>
+            <span class="summary-value">{{ formatPrice(getTotalPrice()) }}</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary form-submit">
+          <i class="fas fa-check"></i>
+          Подтвердить заказ
+        </button>
+      </form>
+    </div>
+
+    <!-- Успешная отправка -->
+    <div class="form-success" *ngIf="isSubmitted">
+      <div class="success-icon">
+        <i class="fas fa-check"></i>
+      </div>
+      <h3>Заказ принят!</h3>
+      <p class="success-set">{{ selectedSet?.name }}</p>
+      <p class="success-qty">Количество: {{ orderQuantity }} шт.</p>
+      <p class="success-total">{{ formatPrice(getTotalPrice()) }}</p>
+      <p class="success-savings" *ngIf="getSavings() > 0">
+        Вы сэкономили {{ formatPrice(getSavings()) }}
+      </p>
+      <p class="success-note">Мы свяжемся с вами для подтверждения</p>
+      <button class="btn btn-outline" (click)="closePopup()">
+        Закрыть
+      </button>
+    </div>
+
+  </div>
+</div>

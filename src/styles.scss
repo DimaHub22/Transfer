@@ -25,6 +25,17 @@
   --radius-xl: 32px;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  //--max: linear-gradient(
+  //    135deg,
+  //    #6366f1 0%,
+  //    #8b5cf6 25%,
+  //    #a855f7 40%,
+  //    #d946ef 55%,
+  //    #ec4899 70%,
+  //    #f43f5e 85%,
+  //    #f97316 100%
+  //);
+  --max:linear-gradient(78deg, #4193e1 0%, #615bd4 25%, #5d4bd4 40%, #5446ef 55%, #6248ec 70%, #8335c7 85%, #9217df 100%);
 }
 
 *, *::before, *::after {
@@ -173,17 +184,19 @@ h1, h2, h3, h4 {
   }
 
   &-whatsapp {
-    background: linear-gradient(135deg, #25d366, #128c7e);
+    //background: linear-gradient(135deg, #25d366, #128c7e);
+    background: var(--max);
     color: white;
-    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+    box-shadow: 0 4px 20px rgba(127, 37, 211, 0.4);
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(37, 211, 102, 0.5);
+      box-shadow: 0 8px 30px rgba(121, 37, 211, 0.5);
     }
   }
 
   &-lg {
+
     padding: 9px 40px;
     font-size: 14px;
     border-radius: var(--radius-lg);
@@ -265,27 +278,35 @@ h1, h2, h3, h4 {
   z-index: 9999;
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #25d366, #128c7e);
+  //background: linear-gradient(135deg, #25d366, #128c7e);
+  //background: linear-gradient(48deg, #5c73ff 0%, #323eb4 35%, #4616aa 65%, #7a06a2 100%);
+  background:var(--max);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-size: 28px;
-  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.5);
+  box-shadow: 0 4px 20px rgba(37, 112, 211, 0.5);
   transition: var(--transition);
   text-decoration: none;
   animation: pulse-whatsapp 2s infinite;
 
+  span  {
+    width: 20px;
+    height: 20px;
+    font-size: 0;
+  }
+
   &:hover {
     transform: scale(1.1);
-    box-shadow: 0 8px 30px rgba(37, 211, 102, 0.6);
+    box-shadow: 0 8px 30px rgba(37, 112, 211, 0.5);
   }
 }
 
 @keyframes pulse-whatsapp {
-  0%, 100% { box-shadow: 0 4px 20px rgba(37, 211, 102, 0.5); }
-  50% { box-shadow: 0 4px 40px rgba(37, 211, 102, 0.8); }
+  0%, 100% { box-shadow: 0 4px 20px rgba(101, 37, 211, 0.5); }
+  50% { box-shadow: 0 4px 40px rgba(156, 116, 234, 0.8); }
 }
 
 /* Back to top */
