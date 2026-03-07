@@ -126,7 +126,7 @@ export class FleetComponent implements AfterViewInit {
       class: 'Минивэн',
       name: 'WEY 80',
       model: 'Минивэн премиум класса',
-      price: '3 000₽',
+      price: '2 300₽',
       featured: true,
       gradient: 'linear-gradient(135deg, #10b981, #059669)',
       description: 'Просторный и комфортный минивэн для семейных поездок. Идеален для путешествий с детьми.',

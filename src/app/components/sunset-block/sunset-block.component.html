@@ -1,29 +1,43 @@
 <!-- Главная секция на весь экран -->
 <section class="hero">
-  <!-- Фон -->
+<!--  <div class="hero-bg">-->
+<!--    <img-->
+<!--      src="https://i.pinimg.com/originals/b4/23/aa/b423aac7db14267264fdd8c6ec36485b.jpg?nii=t"-->
+<!--      alt="Сочи море и горы"-->
+<!--      class="hero-bg-img"-->
+<!--      loading="eager">-->
+<!--  </div>-->
+
   <div class="hero-bg">
-    <img
-      src="https://i.pinimg.com/originals/b4/23/aa/b423aac7db14267264fdd8c6ec36485b.jpg?nii=t"
-      alt="Сочи море и горы"
-      class="hero-bg-img"
-      loading="eager">
+    <video
+      class="hero-bg-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto">
+
+      <source src="assets/video/sunset_video%201.mp4" type="video/mp4">
+
+    </video>
   </div>
 
-  <!-- Оверлей -->
   <div class="hero-overlay"></div>
 
-  <!-- Контент -->
-  <div class="hero-content">
-<!--    <h1 class="hero-title">Сочинский закат</h1>-->
-    <h2 class="hero-subtitle">Премиум трансфер по побережью Чёрного моря</h2>
 
+  <div class="hero-content">
+    <h2 class="hero-subtitle">
+      <span class="subtitle-decoration"></span>
+      Премиум трансфер по побережью Чёрного моря
+      <span class="subtitle-decoration"></span>
+    </h2>
+<!--    <h2 class="hero-subtitle">Премиум трансфер по побережью Чёрного моря</h2>-->
     <button class="btn-go" (click)="openPopup()">
       <i class="fa-solid fa-rocket"></i>
       Поехали
     </button>
   </div>
 
-  <!-- Скролл индикатор -->
   <div class="scroll-indicator">
     <span>Листайте вниз</span>
     <div class="scroll-line">
@@ -36,13 +50,12 @@
 <div class="popup-overlay" *ngIf="isPopupOpen" (click)="closePopup()">
   <div class="popup-wrap" (click)="$event.stopPropagation()">
 
-    <!-- Кнопка закрытия -->
     <button class="popup-close" (click)="closePopup()">
       <i class="fa-solid fa-xmark"></i>
     </button>
 
     <!-- Табы -->
-    <div class="popup-tabs">
+    <div class="popup-tabs" *ngIf="orderStep === 'form' && !isSubmitted">
       <button
         class="popup-tab"
         [class.active]="activeTab === 'callback'"
@@ -59,10 +72,11 @@
       </button>
     </div>
 
-    <!-- Форма обратного звонка -->
+    <!-- ===== Форма обратного звонка ===== -->
     <form
       *ngIf="activeTab === 'callback' && !isSubmitted"
       class="popup-form"
+      [formGroup]="callForm"
       (ngSubmit)="submitCallback()">
 
       <div class="form-header">
@@ -76,12 +90,14 @@
           Ваше имя
         </label>
         <input
+          [class.is-invalid]="showErrors && callForm.get('name')?.invalid"
           type="text"
           class="form-control"
           placeholder="Введите имя"
-          [(ngModel)]="callbackName"
-          name="callbackName"
-          required>
+          formControlName="name">
+        <span class="error" *ngIf="showErrors && callForm.get('name')?.hasError('required')">
+          Заполните поле имя
+        </span>
       </div>
 
       <div class="form-group">
@@ -90,12 +106,16 @@
           Телефон
         </label>
         <input
+          [class.is-invalid]="showErrors && callForm.get('phone')?.invalid"
           type="tel"
           class="form-control"
           placeholder="+7 (___) ___-__-__"
-          [(ngModel)]="callbackPhone"
-          name="callbackPhone"
-          required>
+          prefix="+7 "
+          [mask]="'(000) 000-00-00'"
+          formControlName="phone">
+        <span class="error" *ngIf="showErrors && callForm.get('phone')?.hasError('required')">
+          Заполните поле телефон
+        </span>
       </div>
 
       <button type="submit" class="btn btn--primary form-submit">
@@ -104,10 +124,11 @@
       </button>
     </form>
 
-    <!-- Форма заказа АвтоДжет -->
+    <!-- ===== Форма заказа АвтоДжет ===== -->
     <form
-      *ngIf="activeTab === 'autojet' && !isSubmitted"
+      *ngIf="activeTab === 'autojet' && orderStep === 'form'"
       class="popup-form"
+      [formGroup]="rentCarForm"
       (ngSubmit)="submitAutojet()">
 
       <div class="form-header">
@@ -115,57 +136,275 @@
         <p>Укажите данные для бронирования</p>
       </div>
 
+      <!-- Откуда -->
+      <div class="form-group">
+        <label>
+          <i class="fa-solid fa-location-dot"></i>
+          Откуда
+        </label>
+        <select
+          [class.is-invalid]="carShowErrors && rentCarForm.get('from')?.invalid"
+          class="form-control"
+          formControlName="from">
+          <option value="" disabled>Выберите место</option>
+          <optgroup *ngFor="let group of groupedLocations" [label]="group.category">
+            <option *ngFor="let loc of group.items" [value]="loc.id">
+              {{ loc.name }}
+            </option>
+          </optgroup>
+        </select>
+        <span class="error" *ngIf="carShowErrors && rentCarForm.get('from')?.hasError('required')">
+          Выберите место
+        </span>
+      </div>
+
+      <!-- Дата и Время -->
+      <div class="form-row">
+        <!-- Дата -->
+        <div class="form-group">
+          <label>
+            <i class="fa-solid fa-calendar"></i>
+            Дата
+          </label>
+          <input
+            [class.is-invalid]="carShowErrors && rentCarForm.get('date')?.invalid"
+            type="date"
+            class="form-control form-control--date"
+            [min]="minDate"
+            formControlName="date">
+          <span class="error" *ngIf="carShowErrors && rentCarForm.get('date')?.hasError('required')">
+            Выберите дату
+          </span>
+        </div>
+
+        <!-- Время -->
+        <div class="form-group">
+          <label>
+            <i class="fa-solid fa-clock"></i>
+            Время
+          </label>
+          <select
+            [class.is-invalid]="carShowErrors && rentCarForm.get('time')?.invalid"
+            class="form-control"
+            formControlName="time">
+            <option value="" disabled>Выберите</option>
+            <option *ngFor="let t of timeOptions" [value]="t">
+              {{ t }}
+            </option>
+          </select>
+          <span class="error" *ngIf="carShowErrors && rentCarForm.get('time')?.hasError('required')">
+            Выберите время
+          </span>
+        </div>
+      </div>
+
+      <!-- Имя -->
       <div class="form-group">
         <label>
           <i class="fa-solid fa-user"></i>
           Ваше имя
         </label>
         <input
+          [class.is-invalid]="carShowErrors && rentCarForm.get('name')?.invalid"
           type="text"
           class="form-control"
           placeholder="Введите имя"
-          [(ngModel)]="autojetName"
-          name="autojetName"
-          required>
+          formControlName="name">
+        <span class="error" *ngIf="carShowErrors && rentCarForm.get('name')?.hasError('required')">
+          Заполните поле имя
+        </span>
       </div>
 
+      <!-- Телефон -->
       <div class="form-group">
         <label>
           <i class="fa-solid fa-phone"></i>
           Телефон
         </label>
         <input
+          [class.is-invalid]="carShowErrors && rentCarForm.get('phone')?.invalid"
           type="tel"
           class="form-control"
+          formControlName="phone"
           placeholder="+7 (___) ___-__-__"
-          [(ngModel)]="autojetPhone"
-          name="autojetPhone"
-          required>
+          prefix="+7 "
+          [mask]="'(000) 000-00-00'">
+        <span class="error" *ngIf="carShowErrors && rentCarForm.get('phone')?.hasError('required')">
+          Заполните поле телефон
+        </span>
       </div>
 
+      <!-- Время аренды -->
       <div class="form-group">
         <label>
-          <i class="fa-solid fa-clock"></i>
+          <i class="fa-solid fa-hourglass-half"></i>
           Время аренды
         </label>
         <select
           class="form-control"
-          [(ngModel)]="autojetHours"
-          name="autojetHours">
+          formControlName="hours">
           <option *ngFor="let h of hoursOptions" [value]="h">
             {{ getHoursLabel(h) }}
           </option>
         </select>
       </div>
 
+      <!-- Итого -->
+      <div class="order-summary">
+        <div class="summary-row">
+          <span>Стоимость:</span>
+          <span>{{ formatPrice(pricePerHour) }} / час</span>
+        </div>
+        <div class="summary-row summary-total">
+          <span>Итого:</span>
+          <span class="total-amount">{{ formatPrice(totalPrice) }}</span>
+        </div>
+      </div>
+
       <button type="submit" class="btn btn--primary form-submit">
-        <i class="fa-solid fa-check"></i>
-        Забронировать
+        <i class="fa-solid fa-credit-card"></i>
+        Перейти к оплате
       </button>
     </form>
 
-    <!-- Успешная отправка -->
-    <div class="form-success" *ngIf="isSubmitted">
+    <!-- ===== Форма оплаты ===== -->
+    <form
+      *ngIf="activeTab === 'autojet' && orderStep === 'payment'"
+      class="popup-form payment-form"
+      [formGroup]="paymentForm"
+      (ngSubmit)="submitPayment()">
+
+      <div class="form-header">
+        <h3>Оплата заказа</h3>
+        <p>Введите данные банковской карты</p>
+      </div>
+
+      <!-- Информация о заказе -->
+      <div class="payment-order-info" *ngIf="orderData">
+        <div class="order-info-row">
+          <i class="fa-solid fa-location-dot"></i>
+          <span>{{ orderData.from }}</span>
+        </div>
+        <div class="order-info-row">
+          <i class="fa-solid fa-calendar"></i>
+          <span>{{ formatDate(orderData.date) }}</span>
+        </div>
+        <div class="order-info-row">
+          <i class="fa-solid fa-clock"></i>
+          <span>{{ orderData.time }}, {{ getHoursLabel(orderData.hours) }}</span>
+        </div>
+        <div class="order-info-row order-info-total">
+          <i class="fa-solid fa-ruble-sign"></i>
+          <span>{{ formatPrice(orderData.total) }}</span>
+        </div>
+      </div>
+
+      <!-- Иконки платёжных систем -->
+<!--      <div class="payment-systems">-->
+<!--        <i class="fa-brands fa-cc-visa"></i>-->
+<!--        <i class="fa-brands fa-cc-mastercard"></i>-->
+<!--        <i class="fa-brands fa-cc-apple-pay"></i>-->
+<!--        <i class="fa-brands fa-google-pay"></i>-->
+<!--      </div>-->
+
+      <!-- Номер карты -->
+      <div class="form-group">
+        <label>
+          <i class="fa-solid fa-credit-card"></i>
+          Номер карты
+        </label>
+        <input
+          [class.is-invalid]="paymentShowErrors && paymentForm.get('cardNumber')?.invalid"
+          type="text"
+          class="form-control"
+          placeholder="0000 0000 0000 0000"
+          [mask]="'0000 0000 0000 0000'"
+          formControlName="cardNumber">
+        <span class="error" *ngIf="paymentShowErrors && paymentForm.get('cardNumber')?.invalid">
+          Введите номер карты
+        </span>
+      </div>
+
+      <!-- Срок и CVV -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>
+            <i class="fa-solid fa-calendar"></i>
+            Срок
+          </label>
+          <input
+            [class.is-invalid]="paymentShowErrors && paymentForm.get('expiry')?.invalid"
+            type="text"
+            class="form-control"
+            placeholder="MM/ГГ"
+            [mask]="'00/00'"
+            formControlName="expiry">
+          <span class="error" *ngIf="paymentShowErrors && paymentForm.get('expiry')?.invalid">
+            Введите срок
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <i class="fa-solid fa-lock"></i>
+            CVV
+          </label>
+          <input
+            [class.is-invalid]="paymentShowErrors && paymentForm.get('cvv')?.invalid"
+            type="password"
+            class="form-control"
+            placeholder="•••"
+            [mask]="'000'"
+            formControlName="cvv">
+          <span class="error" *ngIf="paymentShowErrors && paymentForm.get('cvv')?.invalid">
+            Введите CVV
+          </span>
+        </div>
+      </div>
+
+      <!-- Имя держателя -->
+      <div class="form-group">
+        <label>
+          <i class="fa-solid fa-user"></i>
+          Имя на карте
+        </label>
+        <input
+          [class.is-invalid]="paymentShowErrors && paymentForm.get('cardHolder')?.invalid"
+          type="text"
+          class="form-control"
+          placeholder="IVAN IVANOV"
+          formControlName="cardHolder"
+          style="text-transform: uppercase;">
+        <span class="error" *ngIf="paymentShowErrors && paymentForm.get('cardHolder')?.invalid">
+          Введите имя держателя карты
+        </span>
+      </div>
+
+      <!-- Сумма к оплате -->
+      <div class="payment-total">
+        <span>К оплате:</span>
+        <span class="payment-amount">{{ formatPrice(orderData?.total || 0) }}</span>
+      </div>
+
+      <div class="payment-buttons">
+        <button type="button" class="btn btn--outline" (click)="backToForm()">
+          <i class="fa-solid fa-arrow-left"></i>
+          Назад
+        </button>
+        <button type="submit" class="btn btn--primary">
+          <i class="fa-solid fa-lock"></i>
+          Оплатить
+        </button>
+      </div>
+
+      <p class="payment-secure">
+        <i class="fa-solid fa-shield-halved"></i>
+        Безопасная оплата. Данные защищены SSL-шифрованием.
+      </p>
+    </form>
+
+    <!-- ===== Успешная отправка (для обратного звонка) ===== -->
+    <div class="form-success" *ngIf="activeTab === 'callback' && isSubmitted">
       <div class="success-icon">
         <i class="fa-solid fa-check"></i>
       </div>
@@ -176,5 +415,32 @@
       </button>
     </div>
 
+    <!-- ===== Успешная оплата ===== -->
+    <div class="form-success" *ngIf="activeTab === 'autojet' && orderStep === 'success'">
+      <div class="success-icon success-icon--payment">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <h3>Оплата прошла успешно!</h3>
+      <div class="success-details" *ngIf="orderData">
+<!--        <p class="success-order">Заказ №{{ generateOrderNumber() }}</p>-->
+        <p class="success-order">Заказ №{{ orderData.orderNumber }}</p>
+        <p><i class="fa-solid fa-location-dot"></i> {{ orderData.from }}</p>
+        <p><i class="fa-solid fa-calendar"></i> {{ formatDate(orderData.date) }}</p>
+        <p><i class="fa-solid fa-clock"></i> {{ orderData.time }}, {{ getHoursLabel(orderData.hours) }}</p>
+        <p class="success-price"><strong>{{ formatPrice(orderData.total) }}</strong></p>
+      </div>
+      <p class="success-note">Водитель свяжется с вами за 30 минут до подачи</p>
+      <button class="btn btn--primary" (click)="closePopup()">
+        <i class="fa-solid fa-check"></i>
+        Отлично!
+      </button>
+    </div>
+
   </div>
 </div>
+
+
+
+
+
+

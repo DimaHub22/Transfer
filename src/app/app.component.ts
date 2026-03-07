@@ -59,12 +59,12 @@ import {ScenariosComponent} from "./components/scenarios/scenarios.component";
       <main>
         <app-sunset-block></app-sunset-block>
 
-        <app-features id="features"></app-features>
+        <app-features></app-features>
         <app-hero id="home"></app-hero>
         <app-fleet id="fleet"></app-fleet>
         <app-directions id="prices"></app-directions>
-        <app-scenarios></app-scenarios>
-        <app-food-order></app-food-order>
+<!--        <app-scenarios></app-scenarios>-->
+<!--        <app-food-order></app-food-order>-->
         <app-how-it-works id="how"></app-how-it-works>
         <app-reviews id="reviews" *ngIf="isWideScreen"></app-reviews>
         <app-faq id="faq"></app-faq>

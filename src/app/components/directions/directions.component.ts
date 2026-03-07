@@ -21,7 +21,7 @@ export class DirectionsComponent implements AfterViewInit {
       prices: [
         // { class: 'Эконом', amount: 'от 800₽' },
         // { class: 'Комфорт', amount: 'от 1 000₽' },
-        { class: 'Бизнес', amount: 'от 1 500₽' }
+        { class: 'Бизнес', amount: 'от 2 500₽' }
       ]
     },
     {
@@ -33,7 +33,7 @@ export class DirectionsComponent implements AfterViewInit {
       prices: [
         // { class: 'Эконом', amount: 'от 600₽' },
         // { class: 'Комфорт', amount: 'от 900₽' },
-        { class: 'Бизнес', amount: 'от 1 400₽' }
+        { class: 'Бизнес', amount: 'от 2 300₽' }
       ]
     },
     {
@@ -45,7 +45,7 @@ export class DirectionsComponent implements AfterViewInit {
       prices: [
         // { class: 'Эконом', amount: 'от 1 200₽' },
         // { class: 'Комфорт', amount: 'от 1 600₽' },
-        { class: 'Бизнес', amount: 'от 2 400₽' }
+        { class: 'Бизнес', amount: 'от 5 500₽' }
       ]
     },
     {
@@ -57,7 +57,7 @@ export class DirectionsComponent implements AfterViewInit {
       prices: [
         // { class: 'Эконом', amount: 'от 1 500₽' },
         // { class: 'Комфорт', amount: 'от 2 000₽' },
-        { class: 'Бизнес', amount: 'от 3 000₽' }
+        { class: 'Бизнес', amount: 'от 6 000₽' }
       ]
     },
     {
@@ -69,7 +69,7 @@ export class DirectionsComponent implements AfterViewInit {
       prices: [
         // { class: 'Эконом', amount: 'от 1 800₽' },
         // { class: 'Комфорт', amount: 'от 2 400₽' },
-        { class: 'Бизнес', amount: 'от 3 500₽' }
+        { class: 'Бизнес', amount: 'от 6 500₽' }
       ]
     },
     {
@@ -81,7 +81,7 @@ export class DirectionsComponent implements AfterViewInit {
       prices: [
         // { class: 'Эконом', amount: 'от 2 500₽' },
         // { class: 'Комфорт', amount: 'от 3 200₽' },
-        { class: 'Бизнес', amount: 'от 4 500₽' }
+        { class: 'Бизнес', amount: 'от 15 000₽' }
       ]
     }
   ];
