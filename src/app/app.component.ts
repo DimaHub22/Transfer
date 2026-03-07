@@ -12,7 +12,7 @@
 //   title = 'transfer-sochi';
 // }
 
-import { Component, OnInit, HostListener } from '@angular/core';
+import {Component, OnInit, HostListener, Renderer2} from '@angular/core';
 import { CommonModule } from '@angular/common';
 // import { PreloaderComponent } from './components/preloader/preloader.component';
 import { PreloaderComponent } from './components/preloader/preloader.component';
@@ -110,7 +110,18 @@ export class AppComponent implements OnInit {
   showBackToTop = false;
   isWideScreen = false;
 
+  constructor(private renderer: Renderer2) {}
+
   ngOnInit() {
+
+    // Добавляем класс loaded после полной загрузки
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        this.renderer.addClass(document.body, 'loaded');
+      }, 100);
+    });
+
+
     // Preloader
     window.addEventListener('load', () => {
       window.scrollTo(0, 0);

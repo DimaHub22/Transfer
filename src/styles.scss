@@ -58,12 +58,58 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  width: 100%;
+  min-height: 100vh;
+  -moz-osx-font-smoothing: grayscale;
+  /* Предотвращает "прыжки" на iOS */
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Typography */
 h1, h2, h3, h4 {
   font-family: 'Montserrat', sans-serif;
   line-height: 1.2;
+}
+
+/* Фикс для анимаций - используем GPU */
+.hero,
+.hero-bg,
+.hero-bg-img,
+.fleet-card,
+.direction-card,
+.step,
+.accordion-item,
+.faq-illustration,
+.cta-circle {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Отключаем will-change после загрузки для экономии памяти */
+.loaded {
+  .hero-bg-img,
+  .cta-circle {
+    will-change: auto;
+  }
+}
+
+/* Фикс для sticky элементов */
+.faq-left,
+[style*="position: sticky"] {
+  transform: translateZ(0);
+}
+
+/* Предотвращаем дергание при hover анимациях */
+.fleet-card,
+.direction-card,
+.step,
+.feature-card {
+  transform: translateY(0) translateZ(0);
+
+  &:hover {
+    transform: translateY(-8px) translateZ(0);
+  }
 }
 
 /* Scrollbar */
@@ -79,6 +125,7 @@ h1, h2, h3, h4 {
 
 /* Utilities */
 .container {
+  width: 100%;
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 clamp(10px, 4vw, 48px);
@@ -357,6 +404,38 @@ h1, h2, h3, h4 {
   .back-to-top {
     bottom: 82px;
     right: 20px;
+  }
+}
+
+/* Для слабых устройств */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Упрощенные анимации для мобильных */
+@media (max-width: 768px) {
+  .hero-bg-img {
+    animation: none;
+  }
+
+  .particle {
+    display: none;
+  }
+
+  .cta-circle {
+    animation: none;
+  }
+
+  .fleet-card:hover,
+  .direction-card:hover,
+  .step:hover .step-icon {
+    transform: none;
   }
 }
 

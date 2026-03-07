@@ -2,8 +2,12 @@
    ANIMATIONS
    ======================================== */
 @keyframes slowZoom {
-  from { transform: scale(1); }
-  to { transform: scale(1.08); }
+  from {
+    transform: scale3d(1, 1, 1);
+  }
+  to {
+    transform: scale3d(1.08, 1.08, 1);
+  }
 }
 
 @keyframes float {
@@ -45,7 +49,6 @@
 .hero {
   position: relative;
   min-height: 100vh;
-  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -62,8 +65,31 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
+    /* Используем scale3d для GPU ускорения */
     animation: slowZoom 20s ease-in-out infinite alternate;
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
+}
+
+/* Aspect ratio для карточек */
+.gallery-main {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+
+  /* Fallback для старых браузеров */
+  @supports not (aspect-ratio: 16 / 10) {
+    height: 0;
+    padding-bottom: 62.5%; /* 10/16 * 100 */
+  }
+}
+
+/* Skeleton loading для предотвращения CLS */
+.fleet-card,
+.direction-card {
+  min-height: 300px; /* Минимальная высота */
 }
 
 /* Overlay */

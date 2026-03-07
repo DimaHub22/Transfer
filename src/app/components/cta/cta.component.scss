@@ -5,11 +5,11 @@
 /* ===== Animations ===== */
 @keyframes expandCircle {
   0%, 100% {
-    transform: scale(1);
+    transform: scale3d(1, 1, 1) translateZ(0);
     opacity: 0.5;
   }
   50% {
-    transform: scale(1.1);
+    transform: scale3d(1.1, 1.1, 1) translateZ(0);
     opacity: 1;
   }
 }
@@ -76,6 +76,18 @@
   border-radius: 50%;
   border: 1px solid rgba(212, 175, 55, 0.08);
   animation: expandCircle 8s ease-in-out infinite;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+
+  /* Отключаем на мобильных */
+  @media (max-width: 768px) {
+    animation: none;
+    opacity: 0.3;
+  }
+  //border-radius: 50%;
+  //border: 1px solid rgba(212, 175, 55, 0.08);
+  //animation: expandCircle 8s ease-in-out infinite;
 
   &--1 {
     width: 200px;

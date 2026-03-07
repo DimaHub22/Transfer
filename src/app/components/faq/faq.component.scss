@@ -44,6 +44,16 @@
 /* ===== FAQ Left - Mobile ===== */
 .faq-left {
   position: static;
+  @media (min-width: 1024px) {
+    position: sticky;
+    top: 100px;
+    /* Критически важно для плавного sticky */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    /* Высота не должна превышать viewport */
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
 }
 
 /* FAQ Contacts */
