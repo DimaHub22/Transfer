@@ -31,7 +31,7 @@ export class FeaturesComponent implements AfterViewInit {
       gradient: 'linear-gradient(135deg, #7c3aed, #4f46e5)'
     },
     {
-      icon: 'fa fa-bandcamp',
+      icon: 'fa-couch fas',
       title: 'Командирские кресла с массажем',
       description: 'Салон оборудован премиальными командирскими креслами с функцией встроенного массажа. Наслаждайтесь максимальным комфортом на протяжении всей поездки.',
       gradient: 'linear-gradient(135deg, #10b981, #059669)'

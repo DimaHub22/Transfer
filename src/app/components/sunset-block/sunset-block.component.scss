@@ -107,13 +107,13 @@
     object-fit: cover;
   }
 
-  //&-img {
-  //  width: 100%;
-  //  height: 100%;
-  //  object-fit: cover;
-  //  object-position: center;
-  //  animation: slowZoom 20s ease-in-out infinite alternate;
-  //}
+  &-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    animation: slowZoom 20s ease-in-out infinite alternate;
+  }
 }
 
 .hero-overlay {
@@ -353,7 +353,7 @@
   position: relative;
   width: 100%;
   max-width: 460px;
-  max-height: 90vh;
+  max-height: 80vh;
   overflow-y: auto;
   background: var(--bg-popup);
   border: 1px solid rgba(255, 255, 255, 0.1);
