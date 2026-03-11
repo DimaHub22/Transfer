@@ -1,14 +1,36 @@
-<section class="fleet-section" id="fleet">
+<section class="fleet-section"  >
   <!-- Background decoration -->
-  <div class="fleet-bg-deco">
-    <div class="deco-circle deco-1"></div>
-    <div class="deco-circle deco-2"></div>
+<!--  <div class="fleet-bg-deco">-->
+<!--    <div class="deco-circle deco-1"></div>-->
+<!--    <div class="deco-circle deco-2"></div>-->
+<!--  </div>-->
+
+  <!-- Background -->
+  <div class="hero-bg" >
+    <!--    src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1920&q=80&auto=format&fit=crop"-->
+    <!--    src="https://img5.lalafo.com/i/posters/original/43/25/52/854faf021fc73e2ad0b123a0a6.jpeg"-->
+    <img
+      src="assets/car/wey%2080.webp"
+
+      alt="Сочи море и горы"
+      class="hero-bg-img"
+      loading="eager">
+    <div class="hero-overlay"></div>
+    <div class="hero-particles">
+          <span *ngFor="let p of particles"
+                class="particle"
+                [style.width.px]="p.size"
+                [style.height.px]="p.size"
+                [style.left]="p.left"
+                [style.animationDelay]="p.delay"
+                [style.animationDuration]="p.duration"></span>
+    </div>
   </div>
 
-  <div class="container">
+  <div class="container" id="fleet">
     <div class="section-header reveal" #revealEl>
       <span class="section-tag">Наш автопарк</span>
-      <h2 class="section-title">Выберите свой автомобиль</h2>
+      <h2 class="section-title fleet-title">Выберите свой автомобиль</h2>
       <div class="accent-line"></div>
     </div>
 
@@ -21,8 +43,8 @@
         #revealEl>
 
         <!-- Featured badge -->
-        <div class="featured-badge" *ngIf="car.featured">
-          <i class="fas fa-crown"></i> Рекомендуем
+        <div class="featured-badge" [class.coming]="car.comingSoon" *ngIf="car.featured">
+          <i class="fas fa-crown" *ngIf="!car.comingSoon"></i> {{car.comingSoon ? 'Скоро' : 'Рекомендуем'}}
         </div>
 
         <!-- Галерея фото -->
@@ -72,7 +94,7 @@
               <h3 class="car-name">{{ car.name }}</h3>
               <p class="car-model">{{ car.model }}</p>
             </div>
-            <div class="car-price">
+            <div class="car-price" *ngIf="!car.comingSoon">
               <span class="price-from">от</span>
               <span class="price-value">{{ car.price }}</span>
             </div>
@@ -83,7 +105,7 @@
             {{ car.description }}
           </p>
 
-          <div class="car-specs">
+          <div class="car-specs" *ngIf="!car.comingSoon">
             <div class="spec-item" *ngFor="let spec of car.specs">
               <i [class]="spec.icon"></i>
               <span>{{ spec.text }}</span>
@@ -97,14 +119,25 @@
             </span>
           </div>
 
-          <a [href]="'https://wa.me/' + whatsappNumber + '?text=' + getWhatsAppText(car)"
+<!--          [href]="'https://wa.me/' + whatsappNumber + '?text=' + getWhatsAppText(car)"-->
+          <a *ngIf="!car.comingSoon" (click)="bookingScroll()"
              target="_blank"
              class="btn btn-select"
              [class.btn-primary]="car.featured"
              [class.btn-outline]="!car.featured">
-            <i class="fab fa-whatsapp"></i>
+<!--            <i class="fab fa-whatsapp"></i>-->
             Забронировать
           </a>
+
+          <!-- Блок "Скоро в автопарке" если только 1 авто -->
+          <div class="coming-soon" *ngIf="car.comingSoon">
+            <div class="coming-soon-content">
+              <i class="fas fa-car-side"></i>
+              <h3>Скоро в автопарке</h3>
+              <p>Мы расширяем наш автопарк. Следите за обновлениями!</p>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

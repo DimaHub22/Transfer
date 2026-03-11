@@ -39,7 +39,7 @@ export class FeaturesComponent implements AfterViewInit {
     {
       icon: 'fa fa-tint',
       title: 'Кондиционер, вода',
-      description: 'В каждом автомобиле чистая питьевая вода, работающий кондиционер.',
+      description: 'В каждом автомобиле всегда питьевая вода и работающий кондиционер.',
       gradient: 'linear-gradient(135deg, #0ea5e9, #0284c7)'
     },
     {

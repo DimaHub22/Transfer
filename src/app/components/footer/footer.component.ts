@@ -18,19 +18,22 @@ export class FooterComponent implements OnInit {
 
   }
   navLinks = [
-    { href: '#features', label: 'Преимущества' },
-    { href: '#fleet',    label: 'Автопарк' },
-    { href: '#prices',   label: 'Цены и маршруты' },
+    { href: '#features2', label: 'Преимущества' },
+    { href: '#fleet2',    label: 'Автопарк' },
+    { href: '#prices2',   label: 'Цены и маршруты' },
     { href: '#how',      label: 'Как это работает' },
     // { href: '#reviews',  label: 'Отзывы' },
     { href: '#faq',      label: 'Вопросы и ответы' },
     { href: '#booking',  label: 'Забронировать' },
   ];
+  dataSite():number{
+    return new Date().getFullYear();
+  }
 
 
   services = [
     'Трансфер Бизнес',
-    'Минивэн до 7 мест',
+    'Минивэн до 5 мест',
     'Детские кресла',
     'Корпоративный трансфер',
     'Трансфер на горнолыжные курорты',

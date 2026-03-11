@@ -85,7 +85,7 @@
 //   }
 // }
 
-import { Component, AfterViewInit, ElementRef, ViewChildren, QueryList } from '@angular/core';
+import {Component, AfterViewInit, ElementRef, ViewChildren, QueryList, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 interface CarSpec {
@@ -101,10 +101,11 @@ interface Car {
   featured: boolean;
   gradient: string;
   images: string[];
+  comingSoon:boolean;
   imageLabels?: string[];
   description?: string;
-  specs: CarSpec[];
-  features: string[];
+  specs?: CarSpec[];
+  features?: string[];
   activeImage?: number;
 }
 
@@ -115,21 +116,22 @@ interface Car {
   templateUrl: './fleet.component.html',
   styleUrls: ['./fleet.component.scss']
 })
-export class FleetComponent implements AfterViewInit {
+export class FleetComponent implements OnInit, AfterViewInit {
   @ViewChildren('revealEl') revealElements!: QueryList<ElementRef>;
 
   whatsappNumber = '79001234567'; // Замените на ваш номер
-
+  particles: any[] = [];
   // Массив автомобилей — легко добавлять новые
   cars: Car[] = [
     {
       class: 'Минивэн',
-      name: 'WEY 80',
-      model: 'Минивэн премиум класса',
+      name: 'WEY 80 Business Lounge',
+      model: 'Минивэн бизнес класса',
       price: '2 300₽',
       featured: true,
       gradient: 'linear-gradient(135deg, #10b981, #059669)',
-      description: 'Просторный и комфортный минивэн для семейных поездок. Идеален для путешествий с детьми.',
+      description: 'Просторный и комфортный минивэн для людей ценящих комфорт. Идеален для семейных путешествий.',
+      comingSoon: false,
       images: [
         'assets/car/wey_80.webp',
         'assets/car/photo_2026-02-27 19.25.51.webp',
@@ -147,8 +149,8 @@ export class FleetComponent implements AfterViewInit {
       ],
       // imageLabels: ['Экстерьер', 'Салон', 'Сиденья', 'Багажник'],
       specs: [
-        { icon: 'fas fa-users', text: 'До 7 пассажиров' },
-        { icon: 'fas fa-suitcase', text: 'До 7 чемоданов' },
+        { icon: 'fas fa-users', text: 'До 5 пассажиров' },
+        { icon: 'fa-couch fas', text: 'Кресла с массажем' },
         { icon: 'fas fa-snowflake', text: 'Климат-контроль' },
         { icon: 'fas fa-baby', text: 'Детское кресло' }
       ],
@@ -158,8 +160,43 @@ export class FleetComponent implements AfterViewInit {
         'USB зарядка',
         'Вода',
         'Детское кресло',
-        'Багажник XL'
+        // 'Багажник XL'
       ],
+      activeImage: 0
+    },
+    {
+      class: 'Минивэн',
+      name: 'Zeekr 009',
+      model: 'Минивэн премиум класса',
+      price: '2 300₽',
+      featured: true,
+      gradient: 'linear-gradient(135deg, #10b981, #059669)',
+      // description: 'Просторный и комфортный минивэн для людей ценящих комфорт. Идеален для семейных путешествий.',
+      comingSoon: true,
+      images: [
+        'assets/zeekr/zeekr-009-1.webp',
+        'assets/zeekr/zeekr-009-2.webp',
+        'assets/zeekr/zeekr-009-3.webp',
+        'assets/zeekr/zeekr-009-4.webp',
+        'assets/zeekr/zeekr-009-5.webp',
+        'assets/zeekr/zeekr-009-6.webp',
+        // 'https://www.prodrive-shop.com/wp-content/uploads/2017/01/10140_01.jpg',
+      ],
+      // imageLabels: ['Экстерьер', 'Салон', 'Сиденья', 'Багажник'],
+      // specs: [
+      //   { icon: 'fas fa-users', text: 'До 5 пассажиров' },
+      //   { icon: 'fa-couch fas', text: 'Кресла с массажем' },
+      //   { icon: 'fas fa-snowflake', text: 'Климат-контроль' },
+      //   { icon: 'fas fa-baby', text: 'Детское кресло' }
+      // ],
+      // features: [
+      //   'Кондиционер',
+      //   // 'Wi-Fi',
+      //   'USB зарядка',
+      //   'Вода',
+      //   'Детское кресло',
+      //   // 'Багажник XL'
+      // ],
       activeImage: 0
     }
 
@@ -186,6 +223,19 @@ export class FleetComponent implements AfterViewInit {
     // }
   ];
 
+  ngOnInit() {
+    this.generateParticles();
+  }
+
+  generateParticles() {
+    this.particles = Array.from({ length: 18 }, () => ({
+      size: Math.random() * 6 + 2,
+      left: `${Math.random() * 100}%`,
+      delay: `${Math.random() * 10}s`,
+      duration: `${Math.random() * 15 + 10}s`
+    }));
+  }
+
   ngAfterViewInit() {
     const observer = new IntersectionObserver(
       (entries) => entries.forEach(e => {
@@ -194,6 +244,15 @@ export class FleetComponent implements AfterViewInit {
       { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
     );
     this.revealElements.forEach(el => observer.observe(el.nativeElement));
+  }
+
+  bookingScroll(){
+    const ctaSection = document.getElementById('booking');
+    if (ctaSection) {
+      const offset = 80;
+      const top = ctaSection.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
   }
 
   // Навигация по галерее

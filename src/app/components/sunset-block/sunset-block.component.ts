@@ -86,6 +86,22 @@ export class SunsetBlockComponent implements OnInit {
     });
 
     this.rentCarForm.valueChanges.subscribe(() => {
+
+      if(this.rentCarForm.get('from')?.value === 'other'){
+        this.activeTab = 'callback';
+
+        const name = this.rentCarForm.get('name')?.value
+        const phone = this.rentCarForm.get('phone')?.value
+
+        if(name){
+          this.callForm.get('name')?.setValue(name)
+        }
+
+        if(phone){
+          this.callForm.get('phone')?.setValue(phone)
+        }
+      }
+
       this.rentCarForm.invalid ? this.carShowErrors = true :  this.carShowErrors = false
     });
 

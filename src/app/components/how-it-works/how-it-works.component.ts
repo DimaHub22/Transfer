@@ -25,7 +25,7 @@ export class HowItWorksComponent implements AfterViewInit {
       icon: 'fas fa-check-double',
       title: 'Получаете подтверждение',
       description: 'Мы перезвоним или ответим в мессенджер с точной ценой и данными водителя',
-      highlight: 'За 5 минут',
+      highlight: 'За пару минут',
       gradient: 'linear-gradient(135deg, #2563eb, #1d4ed8)'
     },
     {
@@ -40,7 +40,7 @@ export class HowItWorksComponent implements AfterViewInit {
       number: '04',
       icon: 'fas fa-couch',
       title: 'Едете с комфортом',
-      description: 'Расслабьтесь — чистый автомобиль, кондиционер, вода и Wi-Fi уже ждут вас',
+      description: 'Расслабьтесь — чистый автомобиль, кондиционер, вода уже ждут вас',
       highlight: 'Без стресса',
       gradient: 'linear-gradient(135deg, #10b981, #059669)'
     }
