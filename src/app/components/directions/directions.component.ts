@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, ElementRef, ViewChildren, QueryList, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import {ScrollLockService} from "../../services/scroll-lock.service";
 
 interface RoutePrice {
   class: string;
@@ -69,7 +70,7 @@ export class DirectionsComponent implements AfterViewInit {
       time: '~15 мин',
       highlight: false,
       prices: [
-        { class: 'Бизнес', amount: 'от 2 500₽' }
+        { class: 'Бизнес', amount: '2 500₽' }
       ]
     },
     {
@@ -79,7 +80,7 @@ export class DirectionsComponent implements AfterViewInit {
       time: '~20 мин',
       highlight: false,
       prices: [
-        { class: 'Бизнес', amount: 'от 2 300₽' }
+        { class: 'Бизнес', amount: '2 300₽' }
       ]
     },
     {
@@ -89,7 +90,7 @@ export class DirectionsComponent implements AfterViewInit {
       time: '~40 мин',
       highlight: false,
       prices: [
-        { class: 'Бизнес', amount: 'от 5 500₽' }
+        { class: 'Бизнес', amount: '5 500₽' }
       ]
     },
     {
@@ -99,7 +100,7 @@ export class DirectionsComponent implements AfterViewInit {
       time: '~60 мин',
       highlight: false,
       prices: [
-        { class: 'Бизнес', amount: 'от 6 000₽' }
+        { class: 'Бизнес', amount: '6 000₽' }
       ]
     },
     {
@@ -109,7 +110,7 @@ export class DirectionsComponent implements AfterViewInit {
       time: '~70 мин',
       highlight: false,
       prices: [
-        { class: 'Бизнес', amount: 'от 6 500₽' }
+        { class: 'Бизнес', amount: '6 500₽' }
       ]
     },
     {
@@ -119,14 +120,14 @@ export class DirectionsComponent implements AfterViewInit {
       time: '~90 мин',
       highlight: false,
       prices: [
-        { class: 'Бизнес', amount: 'от 15 000₽' }
+        { class: 'Бизнес', amount: '15 000₽' }
       ]
     }
   ];
 
   private isBrowser: boolean;
 
-  constructor(@Inject(PLATFORM_ID) platformId: Object) {
+  constructor(@Inject(PLATFORM_ID) platformId: Object, private scrollLockService: ScrollLockService) {
     this.isBrowser = isPlatformBrowser(platformId);
     this.setMinDate();
   }
@@ -171,6 +172,7 @@ export class DirectionsComponent implements AfterViewInit {
     this.paymentComplete = false;
     this.payLaterComplete = false;
     this.submitted = false;
+    this.scrollLockService.lock();
 
     // Устанавливаем класс авто по умолчанию
     if (route.prices.length > 0) {
@@ -179,7 +181,13 @@ export class DirectionsComponent implements AfterViewInit {
 
     // Блокируем скролл body
     if (this.isBrowser) {
-      document.body.style.overflow = 'hidden';
+      // document.body.style.overflow = 'hidden';
+      setTimeout(() => {
+        const popup = document.querySelector('.popup-overlay');
+        if (popup instanceof HTMLElement) {
+          popup.focus();
+        }
+      }, 100);
     }
   }
 
@@ -193,10 +201,37 @@ export class DirectionsComponent implements AfterViewInit {
 
     // Разблокируем скролл body
     if (this.isBrowser) {
-      document.body.style.overflow = '';
+      this.scrollLockService.unlock();
+      // document.body.style.overflow = '';
+    }
+  }
+  /**
+   * Закрытие по клику на overlay
+   */
+  onOverlayClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (target.classList.contains('popup-overlay')) {
+      this.closePopup(event);
     }
   }
 
+  /**
+   * Закрытие по Escape
+   */
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Escape' && this.isPopupOpen) {
+      this.closePopup(event);
+    }
+  }
+
+  /**
+   * ВАЖНО: Разблокировать скролл при уничтожении компонента
+   */
+  ngOnDestroy(): void {
+    if (this.isPopupOpen) {
+      this.scrollLockService.forceUnlock();
+    }
+  }
   /**
    * Сброс формы
    */
@@ -237,6 +272,7 @@ export class DirectionsComponent implements AfterViewInit {
     if (!this.selectedRoute) return '';
 
     if (this.selectedRoute.prices.length === 1) {
+
       return this.selectedRoute.prices[0].amount;
     }
 

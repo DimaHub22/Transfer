@@ -183,6 +183,7 @@
 }
 
 .footer-contact-item {
+
   display: flex;
   align-items: flex-start;
   gap: 12px;
@@ -190,6 +191,7 @@
   transition: transform 0.2s;
 
   div:last-child {
+    min-width: 150px;
     display: flex;
     flex-direction: column;
     gap: 2px;
