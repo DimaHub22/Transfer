@@ -1,4 +1,13 @@
-import { Component, AfterViewInit, ElementRef, ViewChildren, QueryList, Inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  ElementRef,
+  ViewChildren,
+  QueryList,
+  Inject,
+  PLATFORM_ID,
+  OnDestroy, HostListener
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {ScrollLockService} from "../../services/scroll-lock.service";
@@ -27,6 +36,13 @@ interface BookingForm {
   comment: string;
 }
 
+interface PaymentForm {
+  cardNumber: string;
+  cardHolder: string;
+  expiryDate: string;
+  cvv: string;
+}
+
 @Component({
   selector: 'app-directions',
   standalone: true,
@@ -34,7 +50,7 @@ interface BookingForm {
   templateUrl: './directions.component.html',
   styleUrls: ['./directions.component.scss']
 })
-export class DirectionsComponent implements AfterViewInit {
+export class DirectionsComponent implements AfterViewInit, OnDestroy{
   @ViewChildren('revealEl') revealElements!: QueryList<ElementRef>;
 
   // Popup state
@@ -60,6 +76,17 @@ export class DirectionsComponent implements AfterViewInit {
     passengers: '1',
     carClass: '',
     comment: ''
+  };
+
+  // Добавьте новое свойство для типа оплаты
+  paymentMethod: 'card' | 'cash' | null = null;
+
+  // Payment form
+  paymentForm: PaymentForm = {
+    cardNumber: '',
+    cardHolder: '',
+    expiryDate: '',
+    cvv: ''
   };
 
   routes: Route[] = [
@@ -125,11 +152,23 @@ export class DirectionsComponent implements AfterViewInit {
     }
   ];
 
+  paymentSubmitted = false;
   private isBrowser: boolean;
+  private observer: IntersectionObserver | null = null;
 
   constructor(@Inject(PLATFORM_ID) platformId: Object, private scrollLockService: ScrollLockService) {
     this.isBrowser = isPlatformBrowser(platformId);
     this.setMinDate();
+  }
+
+  /**
+   * Глобальный обработчик Escape
+   */
+  @HostListener('document:keydown.escape',)
+  onEscapeKey(): void {
+    if (this.isPopupOpen) {
+      this.closePopup();
+    }
   }
 
   ngAfterViewInit() {
@@ -162,6 +201,27 @@ export class DirectionsComponent implements AfterViewInit {
   }
 
   /**
+   * Настройка Intersection Observer
+   */
+  private setupIntersectionObserver(): void {
+    this.observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+  );
+
+    this.revealElements.forEach(el => {
+      this.observer?.observe(el.nativeElement);
+    });
+  }
+
+
+      /**
    * Открытие попапа с выбранным маршрутом
    */
   openBookingPopup(route: Route): void {
@@ -172,7 +232,7 @@ export class DirectionsComponent implements AfterViewInit {
     this.paymentComplete = false;
     this.payLaterComplete = false;
     this.submitted = false;
-    this.scrollLockService.lock();
+
 
     // Устанавливаем класс авто по умолчанию
     if (route.prices.length > 0) {
@@ -181,35 +241,34 @@ export class DirectionsComponent implements AfterViewInit {
 
     // Блокируем скролл body
     if (this.isBrowser) {
-      // document.body.style.overflow = 'hidden';
-      setTimeout(() => {
-        const popup = document.querySelector('.popup-overlay');
-        if (popup instanceof HTMLElement) {
-          popup.focus();
-        }
-      }, 100);
+      document.body.style.overflow = 'hidden';
     }
+
+        this.scrollLockService.lock();
   }
 
   /**
    * Закрытие попапа
    */
-  closePopup(event: Event): void {
-    event.stopPropagation();
+  closePopup(event?: Event): void {
+    if(event) event.stopPropagation();
+
     this.isPopupOpen = false;
     this.resetForm();
 
     // Разблокируем скролл body
     if (this.isBrowser) {
-      this.scrollLockService.unlock();
-      // document.body.style.overflow = '';
+      document.body.style.overflow = '';
     }
+    this.scrollLockService.unlock();
   }
+
   /**
    * Закрытие по клику на overlay
    */
   onOverlayClick(event: Event): void {
     const target = event.target as HTMLElement;
+    // Закрываем только если клик был именно на overlay
     if (target.classList.contains('popup-overlay')) {
       this.closePopup(event);
     }
@@ -228,6 +287,12 @@ export class DirectionsComponent implements AfterViewInit {
    * ВАЖНО: Разблокировать скролл при уничтожении компонента
    */
   ngOnDestroy(): void {
+    // Отключаем observer
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+
+    // Разблокируем скролл если попап открыт
     if (this.isPopupOpen) {
       this.scrollLockService.forceUnlock();
     }
@@ -245,11 +310,34 @@ export class DirectionsComponent implements AfterViewInit {
       carClass: '',
       comment: ''
     };
+    this.paymentForm = {
+      cardNumber: '',
+      cardHolder: '',
+      expiryDate: '',
+      cvv: ''
+    };
     this.submitted = false;
+    this.paymentSubmitted = false;
     this.bookingComplete = false;
     this.paymentComplete = false;
     this.payLaterComplete = false;
+    this.paymentMethod = null;
     this.selectedRoute = null;
+
+    // this.bookingForm = {
+    //   name: '',
+    //   phone: '',
+    //   date: '',
+    //   time: '',
+    //   passengers: '1',
+    //   carClass: '',
+    //   comment: ''
+    // };
+    // this.submitted = false;
+    // this.bookingComplete = false;
+    // this.paymentComplete = false;
+    // this.payLaterComplete = false;
+    // this.selectedRoute = null;
   }
 
   /**
@@ -315,8 +403,119 @@ export class DirectionsComponent implements AfterViewInit {
   /**
    * Обработка оплаты
    */
+  // processPayment(): void {
+  //   this.isLoading = true;
+  //
+  //   // Имитация обработки платежа
+  //   setTimeout(() => {
+  //     this.paymentComplete = true;
+  //     this.isLoading = false;
+  //
+  //     console.log('Payment processed:', {
+  //       orderNumber: this.orderNumber,
+  //       amount: this.getSelectedPrice()
+  //     });
+  //   }, 2000);
+  // }
+
+  // /**
+  //  * Оплата позже
+  //  */
+  // payLater(): void {
+  //   this.payLaterComplete = true;
+  //
+  //   console.log('Pay later selected:', {
+  //     orderNumber: this.orderNumber
+  //   });
+  // }
+
+
+
+
+  /**
+   * Форматирование номера карты (4 цифры через пробел)
+   */
+  formatCardNumber(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, '');
+
+    if (value.length > 16) {
+      value = value.substring(0, 16);
+    }
+
+    const formatted = value.match(/.{1,4}/g)?.join(' ') || value;
+    this.paymentForm.cardNumber = formatted;
+  }
+
+  /**
+   * Форматирование срока действия (MM/YY)
+   */
+  formatExpiryDate(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, '');
+
+    if (value.length > 4) {
+      value = value.substring(0, 4);
+    }
+
+    if (value.length >= 2) {
+      value = value.substring(0, 2) + '/' + value.substring(2);
+    }
+
+    this.paymentForm.expiryDate = value;
+  }
+
+  /**
+   * Только цифры для CVV
+   */
+  formatCVV(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, '');
+
+    if (value.length > 3) {
+      value = value.substring(0, 3);
+    }
+
+    this.paymentForm.cvv = value;
+  }
+
+  /**
+   * Определение типа карты по номеру
+   */
+  getCardType(): string {
+    const number = this.paymentForm.cardNumber.replace(/\s/g, '');
+
+    if (number.startsWith('4')) return 'visa';
+    if (number.startsWith('5') || number.startsWith('2')) return 'mastercard';
+    if (number.startsWith('22')) return 'mir';
+
+    return '';
+  }
+
+  /**
+   * Валидация формы оплаты
+   */
+  isPaymentFormValid(): boolean {
+    const cardNumber = this.paymentForm.cardNumber.replace(/\s/g, '');
+    return (
+      cardNumber.length >= 16 &&
+      this.paymentForm.expiryDate.length === 5 &&
+      this.paymentForm.cvv.length === 3
+    );
+  }
+
+  /**
+   * Обновленная обработка оплат
+   */
   processPayment(): void {
+    this.paymentSubmitted = true;
+
+    if (!this.isPaymentFormValid()) {
+      return;
+    }
+
     this.isLoading = true;
+    this.paymentMethod = 'card';
 
     // Имитация обработки платежа
     setTimeout(() => {
@@ -325,21 +524,38 @@ export class DirectionsComponent implements AfterViewInit {
 
       console.log('Payment processed:', {
         orderNumber: this.orderNumber,
-        amount: this.getSelectedPrice()
+        amount: this.getSelectedPrice(),
+        paymentMethod: 'Безналичный расчёт (карта)',
+        cardLast4: this.paymentForm.cardNumber.slice(-4)
       });
     }, 2000);
   }
 
   /**
-   * Оплата позже
+   * Оплата наличными позже
    */
   payLater(): void {
+    this.paymentMethod = 'cash';
     this.payLaterComplete = true;
 
     console.log('Pay later selected:', {
-      orderNumber: this.orderNumber
+      orderNumber: this.orderNumber,
+      paymentMethod: 'Наличными водителю'
     });
   }
+
+  /**
+   * Получить текст способа оплаты
+   */
+  getPaymentMethodText(): string {
+    if (this.paymentMethod === 'card') {
+      return 'Безналичный расчёт';
+    } else if (this.paymentMethod === 'cash') {
+      return 'Наличными водителю';
+    }
+    return '';
+  }
+
 }
 
 
@@ -347,101 +563,4 @@ export class DirectionsComponent implements AfterViewInit {
 
 
 
-// import { Component, AfterViewInit, ElementRef, ViewChildren, QueryList } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-//
-// @Component({
-//   selector: 'app-directions',
-//   standalone: true,
-//   imports: [CommonModule],
-//   templateUrl: './directions.component.html',
-//   styleUrl: './directions.component.scss'
-// })
-// export class DirectionsComponent implements AfterViewInit {
-//   @ViewChildren('revealEl') revealElements!: QueryList<ElementRef>;
-//
-//   routes = [
-//     {
-//       from: 'Аэропорт Сочи',
-//       to: 'Адлер',
-//       distance: '5 км',
-//       time: '~15 мин',
-//       highlight: false,
-//       prices: [
-//         // { class: 'Эконом', amount: 'от 800₽' },
-//         // { class: 'Комфорт', amount: 'от 1 000₽' },
-//         { class: 'Бизнес', amount: 'от 2 500₽' }
-//       ]
-//     },
-//     {
-//       from: 'Аэропорт Сочи',
-//       to: 'Олимпийский парк',
-//       distance: '10 км',
-//       time: '~20 мин',
-//       highlight: false,
-//       prices: [
-//         // { class: 'Эконом', amount: 'от 600₽' },
-//         // { class: 'Комфорт', amount: 'от 900₽' },
-//         { class: 'Бизнес', amount: 'от 2 300₽' }
-//       ]
-//     },
-//     {
-//       from: 'Аэропорт Сочи',
-//       to: 'Центр Сочи',
-//       distance: '30 км',
-//       time: '~40 мин',
-//       highlight: false,
-//       prices: [
-//         // { class: 'Эконом', amount: 'от 1 200₽' },
-//         // { class: 'Комфорт', amount: 'от 1 600₽' },
-//         { class: 'Бизнес', amount: 'от 5 500₽' }
-//       ]
-//     },
-//     {
-//       from: 'Аэропорт Сочи',
-//       to: 'Красная Поляна',
-//       distance: '60 км',
-//       time: '~60 мин',
-//       highlight: false,
-//       prices: [
-//         // { class: 'Эконом', amount: 'от 1 500₽' },
-//         // { class: 'Комфорт', amount: 'от 2 000₽' },
-//         { class: 'Бизнес', amount: 'от 6 000₽' }
-//       ]
-//     },
-//     {
-//       from: 'Аэропорт Сочи',
-//       to: 'Роза Хутор',
-//       distance: '70 км',
-//       time: '~70 мин',
-//       highlight: false,
-//       prices: [
-//         // { class: 'Эконом', amount: 'от 1 800₽' },
-//         // { class: 'Комфорт', amount: 'от 2 400₽' },
-//         { class: 'Бизнес', amount: 'от 6 500₽' }
-//       ]
-//     },
-//     {
-//       from: 'Аэропорт Сочи',
-//       to: 'Лазаревское',
-//       distance: '90 км',
-//       time: '~90 мин',
-//       highlight: false,
-//       prices: [
-//         // { class: 'Эконом', amount: 'от 2 500₽' },
-//         // { class: 'Комфорт', amount: 'от 3 200₽' },
-//         { class: 'Бизнес', amount: 'от 15 000₽' }
-//       ]
-//     }
-//   ];
-//
-//   ngAfterViewInit() {
-//     const observer = new IntersectionObserver(
-//       (entries) => entries.forEach(e => {
-//         if (e.isIntersecting) e.target.classList.add('visible');
-//       }),
-//       { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-//     );
-//     this.revealElements.forEach(el => observer.observe(el.nativeElement));
-//   }
-// }
+

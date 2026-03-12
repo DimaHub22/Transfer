@@ -855,8 +855,11 @@
 /* ===== Popup Overlay - Mobile ===== */
 .popup-overlay {
   position: fixed;
-  inset: 0;
-  z-index: 9999;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99999; /* Очень высокий z-index */
   background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -864,7 +867,23 @@
   align-items: center;
   justify-content: center;
   padding: 10px;
-  animation: fadeIn 0.3s ease;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Для iOS */
+  //position: fixed;
+  //inset: 0;
+  //z-index: 9999;
+  //background: rgba(0, 0, 0, 0.85);
+  //backdrop-filter: blur(8px);
+  //-webkit-backdrop-filter: blur(8px);
+  //display: flex;
+  //align-items: center;
+  //justify-content: center;
+  //padding: 10px;
+  //animation: fadeIn 0.3s ease;
+
+  /* ВАЖНО: Разрешаем взаимодействие */
+  pointer-events: auto !important;
+  touch-action: auto !important;
 }
 
 /* ===== Popup Wrap - Mobile ===== */
@@ -881,6 +900,11 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
+  -webkit-overflow-scrolling: touch;
+  /* ВАЖНО: Разрешаем взаимодействие */
+  pointer-events: auto !important;
+  touch-action: auto !important;
+
   &::-webkit-scrollbar {
     width: 3px;
   }
@@ -893,6 +917,10 @@
     background: rgba(212, 175, 55, 0.3);
     border-radius: 2px;
   }
+}
+/* Все элементы внутри попапа кликабельны */
+.popup-wrap * {
+  pointer-events: auto !important;
 }
 
 /* ===== Popup Close - Mobile ===== */
@@ -1152,6 +1180,162 @@ input[type="time"].form-control {
 /* ===== Payment Form - Mobile ===== */
 .payment-form {
   animation: fadeIn 0.3s ease;
+}
+
+/* ========================================
+   CARD FORM STYLES
+   ======================================== */
+
+.card-form {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.card-form-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  i {
+    color: var(--accent);
+  }
+}
+
+.card-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.card-number-input {
+  padding-right: 50px !important;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+  font-size: 15px;
+  //padding-right: 50px !important;
+}
+
+.card-type-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.6);
+
+  .fa-cc-visa {
+    color: #1a1f71;
+  }
+
+  .fa-cc-mastercard {
+    color: #168506;
+  }
+}
+
+.mir-icon,
+.mir-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: #4db45e;
+  background: rgba(77, 180, 94, 0.15);
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+.cvv-input {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 4px;
+  text-align: center;
+}
+
+.optional-label {
+  font-size: 9px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+  margin-left: 4px;
+}
+
+/* Card Number с иконкой карты */
+.form-control.card-number-input {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+  font-size: 16px;
+}
+
+/* CVV field - скрытый текст */
+.form-control[type="password"] {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 4px;
+}
+
+/* Анимация при фокусе на поле карты */
+.card-form .form-control:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+/* ===== Responsive ===== */
+@media (min-width: 375px) {
+  .card-form {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .card-type-icon {
+    font-size: 26px;
+  }
+}
+
+@media (min-width: 480px) {
+  .card-form {
+    padding: 20px;
+    margin-bottom: 18px;
+  }
+
+  .card-type-icon {
+    font-size: 28px;
+  }
+
+  .form-control.card-number-input {
+    font-size: 17px;
+    letter-spacing: 3px;
+  }
+}
+
+@media (min-width: 640px) {
+  .card-form {
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .card-type-icon {
+    font-size: 30px;
+  }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .card-form {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .card-type-icon {
+    font-size: 20px;
+  }
+
+  .form-control.card-number-input {
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
 }
 
 .payment-order-info {
@@ -1417,6 +1601,156 @@ input[type="time"].form-control {
   font-size: 11px;
   color: rgba(255, 255, 255, 0.5);
   margin-bottom: 14px;
+}
+
+/* ========================================
+   SUCCESS PAYMENT METHOD
+   ======================================== */
+
+.success-payment-method {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  margin: 8px 0 !important;
+
+  i {
+    color: var(--accent) !important;
+  }
+
+  span:first-of-type {
+    flex: 1;
+  }
+}
+
+.payment-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &--card {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+  }
+
+  &--cash {
+    background: rgba(212, 175, 55, 0.15);
+    color: var(--accent);
+  }
+}
+
+.success-icon--cash {
+  background: linear-gradient(135deg, var(--accent), #f5d77e) !important;
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.4) !important;
+}
+
+.success-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 14px;
+
+  i {
+    color: var(--accent);
+  }
+}
+
+/* Payment buttons updated */
+.payment-buttons {
+  .btn--outline {
+    i {
+      color: var(--accent);
+    }
+  }
+}
+
+/* ===== Responsive ===== */
+@media (min-width: 375px) {
+  .card-form {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .card-form-title {
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .card-type-icon {
+    font-size: 26px;
+  }
+
+  .payment-badge {
+    font-size: 10px;
+    padding: 4px 10px;
+  }
+}
+
+@media (min-width: 480px) {
+  .card-form {
+    padding: 20px;
+    margin-bottom: 18px;
+  }
+
+  .card-number-input {
+    font-size: 16px;
+    letter-spacing: 3px;
+  }
+
+  .card-type-icon {
+    font-size: 28px;
+  }
+
+  .success-payment-method {
+    padding: 12px 0;
+  }
+}
+
+@media (min-width: 640px) {
+  .card-form {
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .card-type-icon {
+    font-size: 30px;
+  }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .card-form {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .card-form-title {
+    font-size: 12px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+  }
+
+  .card-number-input {
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+  .card-type-icon {
+    font-size: 20px;
+  }
+
+  .payment-badge {
+    font-size: 8px;
+    padding: 2px 6px;
+  }
 }
 
 /* ========================================
